@@ -58,6 +58,20 @@
             border: 2px solid var(--saffron) !important;
             box-shadow: 0 0 20px rgba(255, 153, 51, 0.15);
         }
+        
+        .gradient-text {
+            background: linear-gradient(to right, var(--saffron), #ffffff, var(--india-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradientAnim 4s linear infinite;
+        }
+        @keyframes gradientAnim {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        
         .limited-badge {
             background: linear-gradient(90deg, var(--saffron), var(--india-green));
             color: white;
@@ -124,7 +138,8 @@
     <section class="pt-48 pb-20 px-6 text-center">
         <div class="reveal">
             <span class="text-xs font-black tracking-widest uppercase border border-orange-500/30 px-4 py-2 rounded-full text-orange-500 mb-6 inline-block">Made in India with Love</span>
-            <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tighter">Code Anywhere. <br> <span class="text-blue-500">Build Everywhere.</span></h1>
+            <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tighter">Code Anywhere. <br> <span class="gradient-text code-font">&lt;Build Everywhere./&gt;</span>
+            </h1>
             <p class="max-w-2xl mx-auto text-lg md:text-xl font-medium mb-10 leading-relaxed">
                 The ultimate Python IDE designed for mobile developers. Native PIP support, split-screen, and offline power.
             </p>
