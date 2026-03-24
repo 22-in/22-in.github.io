@@ -1,439 +1,441 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickCode - Code Your Dreams.</title>
+    <title>Quick Code Pro | Ultimate Mobile Python IDE</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
         :root {
-            --bg-dark: #050507;
-            --primary: #3b82f6;
-            --accent: #8b5cf6;
-            --glass: rgba(255, 255, 255, 0.03);
+            --bg: #050505;
+            --text: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-hover: rgba(255, 255, 255, 0.08);
             --border: rgba(255, 255, 255, 0.08);
+            --primary: #3b82f6;
+        }
+
+        .light-theme {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-hover: rgba(255, 255, 255, 0.9);
+            --border: rgba(0, 0, 0, 0.1);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: #ffffff;
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.5s ease, color 0.5s ease;
             overflow-x: hidden;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
         }
 
-        /* Ambient Glows */
-        .glow-blob {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: -1;
-        }
-        .blob-1 { top: -200px; left: -100px; }
-        .blob-2 { bottom: -200px; right: -100px; background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(0, 0, 0, 0) 70%); }
+        .code-font { font-family: 'JetBrains Mono', monospace; }
 
-        /* Navigation */
-        .glass-nav {
-            background: rgba(5, 5, 7, 0.7);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
+        /* Premium Glassmorphism */
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .glass:hover { background: var(--card-hover); transform: translateY(-5px); }
 
-        /* Typography */
         .gradient-text {
-            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            background: linear-gradient(to right, #60a5fa, #a855f7, #ec4899);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradientAnim 3s linear infinite;
         }
 
-        .mono-font {
-            font-family: 'JetBrains Mono', monospace;
+        @keyframes gradientAnim {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
         }
 
-        /* Buttons */
-        .btn-glow {
+        /* Pro Card Animated Glowing Border */
+        .pro-card-wrapper {
             position: relative;
-            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            z-index: 1;
-            overflow: hidden;
-            transition: all 0.3s ease;
+            padding: 2px;
+            border-radius: 2.5rem;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #10b981);
+            background-size: 300% 300%;
+            animation: proGlow 4s ease infinite;
+            transition: transform 0.4s ease;
         }
-        
-        .btn-glow::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
-            z-index: -1;
-            transition: opacity 0.3s ease;
+        .pro-card-wrapper:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px -10px rgba(139, 92, 246, 0.4);
+        }
+        @keyframes proGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Reveal Animations */
+        .reveal {
             opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+
+        /* Floating Objects */
+        .float-slow { animation: float 6s ease-in-out infinite; }
+        .float-fast { animation: float 4s ease-in-out infinite reverse; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
 
-        .btn-glow:hover::before { opacity: 1; }
-        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4); }
-
-        /* Feature Cards */
-        .feature-card {
-            background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+        /* Form Inputs */
+        .input-field {
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: inherit;
+            padding: 1.2rem;
+            border-radius: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            outline: none;
         }
+        .input-field:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
+        .light-theme .input-field { background: rgba(0, 0, 0, 0.02); }
 
-        .feature-card:hover {
-            border-color: rgba(96, 165, 250, 0.3);
-            transform: translateY(-5px);
-            background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
-        }
-
-        /* === MODULAR PHONE STYLES === */
-        .phone-container {
-            perspective: 1200px;
-        }
-
-        .phone-frame {
-            width: 300px;
-            height: 620px;
-            background: #0f1115;
-            border-radius: 45px;
-            box-shadow: 0 0 0 8px #1f2937, 0 0 0 10px #000, 0 50px 100px -20px rgba(0,0,0,0.7);
-            position: relative;
-            overflow: hidden;
-            transform: rotateY(-10deg) rotateX(5deg);
-            transition: transform 0.5s ease;
-            margin: 0 auto;
-        }
-        
-        .phone-container:hover .phone-frame {
-            transform: rotateY(0deg) rotateX(0deg);
-        }
-
-        .notch {
-            position: absolute;
-            top: 0;
+        /* Toast Notification */
+        #toast {
+            visibility: hidden;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            text-align: center;
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            position: fixed;
+            z-index: 1000;
             left: 50%;
             transform: translateX(-50%);
-            width: 120px;
-            height: 25px;
-            background: #000;
-            border-bottom-left-radius: 16px;
-            border-bottom-right-radius: 16px;
-            z-index: 20;
+            bottom: -50px;
+            font-weight: 700;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
         }
+        #toast.show { visibility: visible; bottom: 40px; opacity: 1; }
 
-        /* This class controls the content inside the screen */
-        .screen-content {
-            width: 100%;
-            height: 100%;
-            background-color: #0d1117; /* Default screen bg */
-            overflow: hidden;
-            position: relative;
+        /* Pricing List Styles */
+        .pricing-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
         }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0b0f1a; }
-        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+        .pricing-list li:last-child { border-bottom: none; }
     </style>
 </head>
-<body class="antialiased">
+<body class="dark-theme">
 
-    <div class="glow-blob blob-1"></div>
-    <div class="glow-blob blob-2"></div>
+    <!-- Animated Background Blobs -->
+    <div class="blob-bg top-[-10%] left-[-10%] float-slow"></div>
+    <div class="blob-bg bottom-[-10%] right-[-10%] float-fast" style="background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 70%);"></div>
+
+    <div id="toast"><i class="fas fa-check-circle mr-2"></i> <span id="toast-msg">Action Successful!</span></div>
 
     <!-- Navigation -->
-    <nav class="glass-nav fixed w-full z-50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3 cursor-pointer">
-                <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
-                    <i class="fas fa-code text-white text-sm"></i>
-                </div>
-                <span class="text-xl font-bold tracking-tight">Quick<span class="text-blue-400">Code</span></span>
+    <nav class="fixed w-full z-50 px-4 py-6 transition-all duration-300" id="navbar">
+        <div class="max-w-6xl mx-auto flex justify-between items-center glass rounded-full px-6 py-3 shadow-lg">
+            <div class="flex items-center gap-3 cursor-pointer hover:scale-105 transition-transform" onclick="window.scrollTo(0,0)">
+                <!-- YAHAN APP KA ICON DAALEIN -->
+                <img src="assets/icons/QC.png" alt="App Icon" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/30" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="hidden w-10 h-10 rounded-xl items-center justify-center font-black text-white shadow-lg">22</div>
+                <span class="text-2xl font-black tracking-tighter">QuickCode<span class="text-blue-500">Pro</span></span>
             </div>
             
-            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
-                <a href="#features" class="hover:text-white transition-colors">Features</a>
-                <a href="#updates" class="hover:text-white transition-colors">Updates</a>
-                <a href="#feedback" class="hover:text-white transition-colors">Feedback</a>
+            <div class="hidden md:flex gap-8 font-bold opacity-60 text-sm uppercase tracking-widest">
+                <a href="#features" class="hover:text-blue-500 hover:opacity-100 transition-all">Features</a>
+                <a href="#pricing" class="hover:text-purple-500 hover:opacity-100 transition-all">Pricing</a>
+                <a href="#developer" class="hover:text-pink-500 hover:opacity-100 transition-all">About</a>
+                <a href="#feedback" class="hover:text-green-500 hover:opacity-100 transition-all">Feedback</a>
             </div>
 
-            <a href="QuickCode_v1.0.2.apk" download class="hidden md:block bg-white/5 hover:bg-white/10 border border-white/10 px-5 py-2 rounded-full text-sm font-semibold transition-all">
-                Download v1.0.2
-            </a>
+            <div class="flex items-center gap-4">
+                <button id="theme-toggle" class="w-10 h-10 glass rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+                    <i class="fas fa-moon text-lg" id="theme-icon"></i>
+                </button>
+                <!-- ASLI DOWNLOAD LINK -->
+                <a href="QuickCode.apk" download="QuickCode.apk" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-full font-black text-sm shadow-lg shadow-blue-500/30 transition-transform hover:scale-105 active:scale-95 hidden sm:block">
+                    Get APK <i class="fas fa-download ml-1"></i>
+                </a>
+            </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="pt-32 pb-20 px-6 min-h-screen flex items-center">
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-            
-            <!-- Left Content -->
-            <div class="max-w-2xl">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-6">
-                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-                    New Version Available
-                </div>
-                
-                <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
-                    Coding on Mobile. <br>
-                    <span class="gradient-text">Pro Experience.</span>
-                </h1>
-                
-                <p class="text-gray-400 text-lg md:text-xl mb-10 leading-relaxed">
-                    QuickCode brings a desktop-grade IDE to your pocket. Record tutorials, debug in real-time, and ship code faster—all without a laptop.
-                </p>
-                
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="QuickCode_v1.0.2.apk" download class="btn-glow px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 text-white shadow-lg">
-                        <i class="fab fa-android text-xl"></i>
-                        Download APK
-                    </a>
-                    <a href="#feedback" class="px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-gray-300">
-                        <i class="fas fa-comment-dots"></i>
-                        Send Feedback
-                    </a>
-                </div>
-                
-                <div class="mt-8 flex items-center gap-4 text-sm text-gray-500 font-medium">
-                    <div class="flex -space-x-2">
-                        <div class="w-8 h-8 rounded-full bg-red-700 border-2 border-[#050507]"></div>
-                        <div class="w-8 h-8 rounded-full bg-gray-600 border-2 border-[#050507]"></div>
-                        <div class="w-8 h-8 rounded-full bg-green-500 border-2 border-[#050507]"></div>
-                    </div>
-                    <p>Loved by Developers</p>
-                </div>
+    <section class="pt-48 pb-24 px-6 text-center max-w-5xl mx-auto relative z-10">
+        <div class="reveal">
+            <div class="inline-flex items-center gap-2 px-5 py-2 glass rounded-full text-xs font-black tracking-[0.2em] uppercase mb-8 border border-blue-500/30 text-blue-400 shadow-lg shadow-blue-500/10 float-slow">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span>
+                v2.2.0 is now live
             </div>
+            <h1 class="text-6xl md:text-8xl font-black mb-8 tracking-tighter leading-[1.1]">
+                Make Your Dream <br> Into <span class="gradient-text code-font">&lt;Code/&gt;</span>
+            </h1>
+            <p class="text-xl opacity-60 mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
+                A PC-level Python IDE built entirely for your smartphone. Featuring offline execution, real-time terminal, native PIP manager, and true multitasking.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
+                <!-- DOWNLOAD APK BUTTON -->
+                <a href="QuickCodePro.apk" download="QuickCodePro.apk" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white px-10 py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 shadow-2xl shadow-blue-500/40 transition-transform hover:-translate-y-1 active:scale-95">
+                    <i class="fab fa-android text-2xl"></i> Download APK Now
+                </a>
+                <a href="#pricing" class="w-full sm:w-auto glass px-10 py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition-transform hover:-translate-y-1">
+                    View Pro Plans <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
 
-            <!-- Right Content: MODULAR PHONE -->
-            <div class="phone-container flex justify-center lg:justify-end">
-                <div class="phone-frame">
-                    <div class="notch"></div>
+    <!-- App Features -->
+    <section id="features" class="py-24 px-6 max-w-6xl mx-auto">
+        <div class="text-center mb-20 reveal">
+            <span class="text-blue-500 font-black tracking-[0.2em] uppercase text-sm">Capabilities</span>
+            <h2 class="text-4xl md:text-5xl font-black mt-2">Desktop Power in your Pocket.</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="glass p-10 rounded-[2.5rem] reveal">
+                <div class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 mb-8 float-slow">
+                    <i class="fas fa-columns text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-black mb-4">Smart Split-Screen</h3>
+                <p class="opacity-60 text-base leading-relaxed">Rotate your device to enter Landscape mode. Code on two files simultaneously with smart auto-save support.</p>
+            </div>
+            <div class="glass p-10 rounded-[2.5rem] reveal delay-100">
+                <div class="w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-500 mb-8 float-fast">
+                    <i class="fas fa-box-open text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-black mb-4">Native PIP Manager</h3>
+                <p class="opacity-60 text-base leading-relaxed">Install any Python library directly to your local isolated QCA folder. No internet needed to run them later.</p>
+            </div>
+            <div class="glass p-10 rounded-[2.5rem] reveal delay-200">
+                <div class="w-16 h-16 bg-green-500/10 rounded-2xl flex items-center justify-center text-green-500 mb-8 float-slow">
+                    <i class="fas fa-terminal text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-black mb-4">Interactive Terminal</h3>
+                <p class="opacity-60 text-base leading-relaxed">A real-time console that handles standard inputs, CMD commands, and real-time script outputs flawlessly.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Highly Professional Pricing Section -->
+    <section id="pricing" class="py-24 px-6 max-w-5xl mx-auto">
+        <div class="text-center mb-20 reveal">
+            <span class="text-purple-500 font-black tracking-[0.2em] uppercase text-sm">Pricing</span>
+            <h2 class="text-4xl md:text-5xl font-black mt-2">Unlock Your True Potential</h2>
+            <p class="opacity-60 mt-4 text-lg">No hidden fees. Upgrade once, code forever.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-10 items-center">
+            
+            <!-- Free Tier Card -->
+            <div class="glass p-10 rounded-[3rem] reveal border-t-4 border-gray-600 flex flex-col h-full justify-between">
+                <div>
+                    <span class="bg-gray-800 text-gray-300 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Starter</span>
+                    <h3 class="text-3xl font-black mt-6 mb-2">Free Tier</h3>
+                    <div class="text-5xl font-black mb-8">₹0 <span class="text-lg opacity-40 font-medium">/forever</span></div>
+                    <p class="opacity-60 text-sm mb-8 border-b border-white/10 pb-8">Perfect for beginners learning Python basics on their smartphone.</p>
                     
-                    <!-- 
-                        === MODULAR PHONE SCREEN UI START === 
-                        Edit everything inside 'screen-content' to change the mobile interface.
-                    -->
-                    <div class="screen-content flex flex-col font-sans">
+                    <ul class="pricing-list text-base font-semibold mb-10">
+                        <li><span class="w-8 flex justify-center"><i class="fas fa-ad text-yellow-500"></i></span> <span class="opacity-80">Ads: Yes (Small Banners)</span></li>
+                        <li><span class="w-8 flex justify-center"><i class="fas fa-times text-red-500 opacity-60"></i></span> <span class="opacity-50 line-through">Split Screen Multitasking</span></li>
+                        <li><span class="w-8 flex justify-center"><i class="fas fa-times text-red-500 opacity-60"></i></span> <span class="opacity-50 line-through">Cloud Sync Backup</span></li>
+                        <li><span class="w-8 flex justify-center"><i class="fas fa-palette text-gray-400"></i></span> <span class="opacity-80">Themes: Basic Light/Dark</span></li>
+                        <li><span class="w-8 flex justify-center"><i class="fas fa-box text-gray-400"></i></span> <span class="opacity-80">Pip Library: Pre-installed Only</span></li>
+                        <li><span class="w-8 flex justify-center"><i class="fas fa-history text-gray-400"></i></span> <span class="opacity-80">CMD History: Last One Only</span></li>
+                    </ul>
+                </div>
+                <button class="w-full glass py-4 rounded-xl font-black opacity-50 cursor-not-allowed">Current Plan</button>
+            </div>
+
+            <!-- Pro Tier Card (Animated Glow) -->
+            <div class="pro-card-wrapper reveal delay-100 h-full">
+                <div class="bg-[#0a0a0a] p-10 rounded-[2.4rem] h-full flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-purple-600 text-white text-xs font-black px-8 py-2 rounded-bl-3xl uppercase tracking-widest shadow-lg">Most Popular</div>
+                    
+                    <div>
+                        <span class="bg-blue-500/20 text-blue-400 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Professional</span>
+                        <h3 class="text-3xl font-black mt-6 mb-2 gradient-text">Pro Tier</h3>
+                        <div class="text-5xl font-black mb-8 text-white">₹99 <span class="text-lg opacity-50 font-medium text-white">/mo</span></div>
+                        <p class="opacity-70 text-sm mb-8 border-b border-white/10 pb-8">For serious developers who need desktop-level multitasking and power.</p>
                         
-                        <!-- Header Bar -->
-                        <div class="h-14 bg-[#161b22] flex items-end pb-2 px-4 justify-between border-b border-gray-800 pt-6">
-                            <i class="fas fa-bars text-gray-400"></i>
-                            <span class="text-xs font-semibold text-gray-500">workspace/main.py</span>
-                            <i class="fas fa-play text-green-500 hover:text-green-400 cursor-pointer transition"></i>
-                        </div>
-
-                        <!-- Editor Area -->
-                        <div class="flex-1 bg-[#0d1117] p-4 mono-font text-xs leading-relaxed overflow-y-auto">
-                            <div class="flex gap-3">
-                                <div class="text-gray-600 select-none text-right">
-                                    1<br>2<br>3<br>4<br>5<br>6
-                                </div>
-                                <div class="text-gray-300">
-                                    <span class="text-purple-400">import</span> sys<br>
-                                    <span class="text-purple-400">from</span> quickcode <span class="text-purple-400">import</span> Editor<br>
-                                    <br>
-                                    <span class="text-gray-500"># Initialize App</span><br>
-                                    <span class="text-blue-400">def</span> <span class="text-yellow-200">main</span>():<br>
-                                    &nbsp;&nbsp;app = Editor(theme=<span class="text-green-400">"Dark"</span>)<br>
-                                    &nbsp;&nbsp;<span class="text-cyan-400">print</span>(<span class="text-green-400">"Hello World!"</span>)
-                                </div>
-                            </div>
-                            <!-- Cursor Animation -->
-                            <div class="mt-1 w-2 h-4 bg-blue-500 animate-pulse inline-block"></div>
-                        </div>
-
-                        <!-- Terminal / Bottom Panel -->
-                        <div class="h-32 bg-[#161b22] border-t border-gray-800 p-3">
-                            <div class="flex gap-4 text-[10px] text-gray-400 mb-2 uppercase tracking-wider font-bold">
-                                <span class="text-white border-b-2 border-blue-500 pb-1">Terminal</span>
-                                <span>Output</span>
-                                <span>Problems</span>
-                            </div>
-                            <div class="mono-font text-[10px] text-gray-300">
-                                <span class="text-green-500">➜</span> <span class="text-blue-400">~</span> python main.py<br>
-                                Hello World!<br>
-                                <span class="text-green-500">➜</span> <span class="text-blue-400">~</span> <span class="animate-pulse">_</span>
-                            </div>
-                        </div>
-
-                        <!-- Touch Controls -->
-                        <div class="h-12 bg-[#0d1117] border-t border-gray-800 flex items-center justify-around text-gray-400 text-lg">
-                            <i class="fas fa-keyboard hover:text-white transition"></i>
-                            <div class="w-12 h-1 bg-gray-600 rounded-full"></div>
-                            <i class="fas fa-cog hover:text-white transition"></i>
-                        </div>
-
+                        <ul class="pricing-list text-base font-bold mb-10">
+                            <li><span class="w-8 flex justify-center"><i class="fas fa-ban text-green-400"></i></span> <span class="text-green-400">No Ads (Clean Experience)</span></li>
+                            <li><span class="w-8 flex justify-center"><i class="fas fa-columns text-blue-400"></i></span> <span class="text-white">Split Screen (Multitasking)</span></li>
+                            <li><span class="w-8 flex justify-center"><i class="fas fa-cloud-upload-alt text-blue-400"></i></span> <span class="text-white">Cloud Sync (Safe Backup)</span></li>
+                            <li><span class="w-8 flex justify-center"><i class="fas fa-paint-brush text-purple-400"></i></span> <span class="text-purple-300">Advance Themes (Neon, Retro)</span></li>
+                            <li><span class="w-8 flex justify-center"><i class="fas fa-unlock-alt text-yellow-400"></i></span> <span class="text-yellow-300">Pip Library: Full Access</span></li>
+                            <li><span class="w-8 flex justify-center"><i class="fas fa-infinity text-blue-400"></i></span> <span class="text-blue-300">CMD History: Unlimited</span></li>
+                        </ul>
                     </div>
-                    <!-- === MODULAR PHONE SCREEN UI END === -->
-
+                    <!-- PRO DOWNLOAD BUTTON -->
+                    <a href="QuickCodePro.apk" download="QuickCodePro.apk" class="w-full text-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white py-4 rounded-xl font-black text-lg shadow-xl shadow-blue-500/30 transition-transform hover:-translate-y-1 block active:scale-95">
+                        Upgrade inside App <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
                 </div>
             </div>
 
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="py-24 px-6 relative">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Engineered for <span class="text-blue-400">Performance</span></h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">Built with native optimization to run heavy scripts on 2GB RAM devices.</p>
+    <!-- Meet the Developer Section -->
+    <section id="developer" class="py-24 px-6">
+        <div class="max-w-6xl mx-auto glass rounded-[4rem] p-8 md:p-20 reveal relative overflow-hidden border border-blue-500/20 shadow-2xl shadow-blue-900/10">
+            <div class="absolute top-0 right-0 p-10 opacity-5 pointer-events-none">
+                <i class="fas fa-quote-right text-[150px]"></i>
             </div>
-
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- Feature 1 -->
-                <div class="feature-card p-8 rounded-3xl">
-                    <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-6">
-                        <i class="fas fa-bolt text-blue-400 text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Blazing Fast</h3>
-                    <p class="text-sm text-gray-400 leading-relaxed">Highly optimized Python 3 ensures your editor never lags, even with Big projects.</p>
-                </div>
-
-                <!-- Feature 2 -->
-                <div class="feature-card p-8 rounded-3xl">
-                    <div class="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center mb-6">
-                        <i class="fas fa-video text-purple-400 text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Built-in Recorder</h3>
-                    <p class="text-sm text-gray-400 leading-relaxed">Record your screen in 1080p without needing third-party apps.</p>
-                </div>
-
-                <!-- Feature 3 -->
-                <div class="feature-card p-8 rounded-3xl">
-                    <div class="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-6">
-                        <i class="fas fa-palette text-emerald-400 text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">True VS Code Themes</h3>
-                    <p class="text-sm text-gray-400 leading-relaxed">Import .json themes directly from VS Code extensions. Dark Mode, Dracula, Monokai included.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Updates Section -->
-    <section id="updates" class="py-20 px-6">
-        <div class="max-w-4xl mx-auto bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12 relative overflow-hidden">
-            <!-- Background Decoration -->
-            <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-3xl rounded-full -mr-32 -mt-32"></div>
-
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-                <div>
-                    <h2 class="text-3xl font-bold mb-2">Latest Patch Notes</h2>
-                    <p class="text-gray-400 text-sm">Stay updated with our rapid development cycle.</p>
-                </div>
-                <span class="mt-4 md:mt-0 bg-blue-500/20 text-blue-300 px-4 py-1.5 rounded-full text-xs font-bold border border-blue-500/30">
-                    v1.0.2 LIVE
-                </span>
-            </div>
-
-            <div class="space-y-6 border-l border-gray-700 pl-8 relative">
-                <!-- Timeline Dot -->
-                <div class="absolute left-[-5px] top-0 w-2.5 h-2.5 bg-blue-500 rounded-full shadow-[0_0_10px_#3b82f6]"></div>
-                
-                <div class="space-y-4">
-                    <div class="flex items-start gap-3">
-                        <i class="fas fa-check-circle text-blue-400 mt-1"></i>
-                        <p class="text-gray-300">Fixed crash on Android 12+.</p>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <i class="fas fa-check-circle text-blue-400 mt-1"></i>
-                        <p class="text-gray-300">Added Cloud service for more secure Coding.</p>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <i class="fas fa-check-circle text-blue-400 mt-1"></i>
-                        <p class="text-gray-300">Improved "Dark Premium" theme contrast ratio.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Feedback Section (Replaces Source Code) -->
-    <section id="feedback" class="py-20 px-6">
-        <div class="max-w-xl mx-auto text-center">
-            <h2 class="text-3xl font-bold mb-6">We Value Your <span class="text-purple-400">Feedback</span></h2>
-            <p class="text-gray-400 mb-8">Found a bug or have a feature request? Let us know directly.</p>
             
-            <form class="space-y-4 text-left">
-                <div>
-                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">Your Email</label>
-                    <input type="email" placeholder="dev@example.com" class="w-full mt-2 bg-[#0f1115] border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors">
+            <div class="flex flex-col lg:flex-row gap-16 items-center relative z-10">
+                <!-- YAHAN APNI PHOTO DAALEIN -->
+                <div class="w-56 h-56 md:w-80 md:h-80 rounded-[3rem] bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shrink-0 overflow-hidden p-1.5 float-slow shadow-2xl">
+                    <img src="AGTech.jpg" alt="Akash Agrawal" class="w-full h-full object-cover rounded-[2.8rem]" onerror="this.src='https://ui-avatars.com/api/?name=Akash+Agrawal&size=512&background=050505&color=fff'">
+                </div>
+                
+                <div class="text-center lg:text-left">
+                    <span class="text-sm font-black text-blue-500 uppercase tracking-[0.3em] mb-4 block"><i class="fas fa-code-branch mr-2"></i> Manager & Developer</span>
+                    <h2 class="text-4xl md:text-6xl font-black mb-8 tracking-tighter italic">"A Journey from the <br> Modern Village."</h2>
+                    <div class="text-lg opacity-70 leading-relaxed space-y-6 font-medium">
+                        <p>
+                            Coming from a background rooted in the values of the <strong>Modern Village</strong> and deeply inspired by the principles of <strong>Maharaja Agrasen Ji</strong>, I noticed a massive gap in technology access.
+                        </p>
+                        <p>
+                            While expensive laptops aren't available to everyone, smartphones are everywhere. QuickCode Pro wasn't just built to be an app; it was built as a mission to democratize computing and empower the next generation of creators.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-4 justify-center lg:justify-start mt-10">
+                        <div class="px-5 py-2.5 glass rounded-full text-xs font-black uppercase tracking-widest text-blue-400 shadow-lg"><i class="fas fa-eye mr-2"></i> Visionary</div>
+                        <div class="px-5 py-2.5 glass rounded-full text-xs font-black uppercase tracking-widest text-purple-400 shadow-lg"><i class="fas fa-building mr-2"></i> 22 Company</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feedback Section -->
+    <section id="feedback" class="py-24 px-6 relative">
+        <div class="max-w-3xl mx-auto glass p-10 md:p-16 rounded-[3.5rem] reveal shadow-2xl">
+            <div class="text-center mb-12">
+                <span class="text-green-500 font-black tracking-[0.2em] uppercase text-sm">Contact</span>
+                <h2 class="text-4xl font-black mt-2 mb-4">Let's Connect</h2>
+                <p class="text-base opacity-60">We value your insights, bug reports, and feature requests.</p>
+            </div>
+            
+            <form action="https://formsubmit.co/quickcode.by.22@gmail.com" method="POST" class="space-y-6">
+                <div class="grid md:grid-cols-2 gap-5">
+                    <input type="text" name="name" required placeholder="Your Name" class="input-field...">
+                    <input type="email" name="email" required placeholder="Your Email" class="input-field...">
                 </div>
                 <div>
-                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wide ml-1">Message</label>
-                    <textarea rows="4" placeholder="I think you should add..." class="w-full mt-2 bg-[#0f1115] border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors"></textarea>
+                    <textarea name="message" required placeholder="Write your message here..." rows="5" class="input-field..."></textarea>
                 </div>
-                <button type="button" class="w-full btn-glow py-4 rounded-xl font-bold text-white shadow-lg">
-                    Submit Feedback
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_next" value="https://agtech-g.github.io/QuickCode/#feedback">
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white py-5 rounded-[1.5rem] font-black text-xl shadow-xl shadow-blue-500/20 transition-all hover:-translate-y-1 active:scale-95">
+                    Send Message <i class="fas fa-paper-plane ml-2"></i>
                 </button>
             </form>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="border-t border-white/5 bg-[#020203] py-12 px-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-2">
-                <i class="fas fa-code text-blue-500"></i>
-                <span class="font-bold text-lg text-gray-200">QuickCode</span>
-            </div>
-            
-            <p class="text-gray-600 text-sm">
-                &copy; 2026 QuickCode. Made by 22 for mobile-first developers.
-            </p>
-
-            <div class="flex gap-6">
-                <a href="#" class="text-gray-500 hover:text-blue-400 transition-colors"><i class="fab fa-twitter text-xl"></i></a>
-                <a href="#" class="text-gray-500 hover:text-white transition-colors"><i class="fab fa-github text-xl"></i></a>
-                <a href="#" class="text-gray-500 hover:text-indigo-400 transition-colors"><i class="fab fa-discord text-xl"></i></a>
-            </div>
+    <footer class="py-12 px-6 border-t border-white/10 text-center mt-10">
+        <div class="max-w-4xl mx-auto flex flex-col items-center">
+            <div class="text-2xl font-black tracking-tighter mb-4">QuickCode <span class="text-blue-500">Pro</span></div>
+            <p class="text-xs opacity-40 font-bold uppercase tracking-[0.2em] mb-6">A Product by 22 Company</p>
+            <p class="text-sm opacity-50">&copy; 2024 All Rights Reserved. Harvesting Potential Everywhere.</p>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // === APNI KEYS YAHAN DALO ===
-        const SUPABASE_URL = "https://frngrksyfucozsqkxwyh.supabase.co"; 
-        const SUPABASE_KEY = "sb_publishable_wvugh3bCaZJc5uusZWbHyg_BUypP-dA"; // Dashboard -> Settings -> API -> anon public key
-        
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        async function syncMeter() {
-            const totalSeats = 1000; 
-            try {
-                const { data, error } = await _supabase
-                    .from('project_22')
-                    .select('seats_left')
-                    .eq('id', 1)
-                    .single();
-                
-                if (error) throw error;
-
-                if (data) {
-                    const left = data.seats_left;
-                    const sold = totalSeats - left;
-                    const percent = (sold / totalSeats) * 100;
-
-                    document.getElementById('seats-left').innerText = left;
-                    document.getElementById('sold-count').innerText = sold;
-                    document.getElementById('progress-fill').style.width = percent + '%';
+        // Scroll Reveal Logic with Intersection Observer
+        const revealCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
                 }
-            } catch (err) {
-                console.log("Database connection wait...");
+            });
+        };
+        const observer = new IntersectionObserver(revealCallback, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Theme Toggle Logic (Sleek Switch)
+        const themeBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            if (document.body.classList.contains('light-theme')) {
+                themeIcon.className = 'fas fa-sun text-yellow-500';
+            } else {
+                themeIcon.className = 'fas fa-moon text-white';
             }
+        });
+
+        // Form Handling & Custom Toast Notification
+        function handleSubmit(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = "Transmitting... <i class='fas fa-spinner fa-spin ml-2'></i>";
+            btn.disabled = true;
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            // Simulating API Call
+            setTimeout(() => {
+                showToast("Feedback Sent Successfully! We'll review it soon.");
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
+                e.target.reset();
+            }, 1500);
+            
+            return false;
         }
 
-        syncMeter();
-        setInterval(syncMeter, 5000);
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            const toastMsg = document.getElementById("toast-msg");
+            toastMsg.innerText = msg;
+            toast.classList.add("show");
+            
+            // Hide toast after 4 seconds
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 4000);
+        }
+
+        // Dynamic Navbar Blur on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('#navbar > div');
+            if (window.scrollY > 50) {
+                nav.classList.add('py-2');
+                nav.classList.remove('py-3');
+                nav.style.backgroundColor = document.body.classList.contains('light-theme') ? "rgba(255,255,255,0.8)" : "rgba(5, 5, 5, 0.8)";
+            } else {
+                nav.classList.add('py-3');
+                nav.classList.remove('py-2');
+                nav.style.backgroundColor = "";
+            }
+        });
     </script>
 </body>
 </html>
