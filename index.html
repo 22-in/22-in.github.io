@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Code Pro | Ultimate Mobile Python IDE</title>
+    <title>Quick Code | Ultimate Mobile Python IDE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,17 +12,19 @@
         :root {
             --bg: #050505;
             --text: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.7);
             --card-bg: rgba(255, 255, 255, 0.03);
-            --card-hover: rgba(255, 255, 255, 0.08);
-            --border: rgba(255, 255, 255, 0.08);
-            --primary: #3b82f6;
+            --border: rgba(255, 255, 255, 0.1);
+            --saffron: #FF9933;
+            --india-green: #138808;
+            --code-blue: #3b82f6;
         }
 
         .light-theme {
             --bg: #f8fafc;
             --text: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.7);
-            --card-hover: rgba(255, 255, 255, 0.9);
+            --text-dim: #475569;
+            --card-bg: #ffffff;
             --border: rgba(0, 0, 0, 0.1);
         }
 
@@ -30,412 +32,266 @@
             font-family: 'Bricolage Grotesque', sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            transition: background-color 0.5s ease, color 0.5s ease;
-            overflow-x: hidden;
+            transition: all 0.4s ease;
+            background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
+            background-size: 32px 32px;
         }
 
         .code-font { font-family: 'JetBrains Mono', monospace; }
 
-        /* Premium Glassmorphism */
+        /* Smooth Glass Effect */
         .glass {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .glass:hover { background: var(--card-hover); transform: translateY(-5px); }
-
-        .gradient-text {
-            background: linear-gradient(to right, #60a5fa, #a855f7, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: gradientAnim 3s linear infinite;
-        }
-
-        @keyframes gradientAnim {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-
-        /* Pro Card Animated Glowing Border */
-        .pro-card-wrapper {
-            position: relative;
-            padding: 2px;
-            border-radius: 2.5rem;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #10b981);
-            background-size: 300% 300%;
-            animation: proGlow 4s ease infinite;
-            transition: transform 0.4s ease;
-        }
-        .pro-card-wrapper:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 50px -10px rgba(139, 92, 246, 0.4);
-        }
-        @keyframes proGlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Reveal Animations */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        .delay-100 { transition-delay: 100ms; }
-        .delay-200 { transition-delay: 200ms; }
-
-        /* Floating Objects */
-        .float-slow { animation: float 6s ease-in-out infinite; }
-        .float-fast { animation: float 4s ease-in-out infinite reverse; }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        /* Form Inputs */
-        .input-field {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            color: inherit;
-            padding: 1.2rem;
-            border-radius: 1rem;
-            width: 100%;
             transition: all 0.3s ease;
-            outline: none;
         }
-        .input-field:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
-        .light-theme .input-field { background: rgba(0, 0, 0, 0.02); }
+        .glass:hover { transform: translateY(-5px); border-color: var(--code-blue); }
 
-        /* Toast Notification */
-        #toast {
-            visibility: hidden;
-            background: linear-gradient(135deg, #10b981, #059669);
+        /* Typography Optimization */
+        p, span, li { color: var(--text-dim); }
+        h1, h2, h3, strong, .text-important { color: var(--text); }
+
+        /* Special Lifetime Card Glow */
+        .lifetime-glow {
+            position: relative;
+            border: 2px solid var(--saffron) !important;
+            box-shadow: 0 0 20px rgba(255, 153, 51, 0.15);
+        }
+        .limited-badge {
+            background: linear-gradient(90deg, var(--saffron), var(--india-green));
             color: white;
-            text-align: center;
-            border-radius: 50px;
-            padding: 1rem 2rem;
-            position: fixed;
-            z-index: 1000;
+            font-size: 10px;
+            padding: 4px 12px;
+            border-radius: 99px;
+            position: absolute;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            bottom: -50px;
-            font-weight: 700;
-            opacity: 0;
-            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            white-space: nowrap;
+            font-weight: 900;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        #toast.show { visibility: visible; bottom: 40px; opacity: 1; }
 
-        /* Pricing List Styles */
-        .pricing-list li {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
+        /* Animations */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 0.6s all ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        #toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--india-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 1000;
+            transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-weight: 700;
         }
-        .pricing-list li:last-child { border-bottom: none; }
+        #toast.show { bottom: 40px; }
     </style>
 </head>
 <body class="dark-theme">
 
-    <!-- Animated Background Blobs -->
-    <div class="blob-bg top-[-10%] left-[-10%] float-slow"></div>
-    <div class="blob-bg bottom-[-10%] right-[-10%] float-fast" style="background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, transparent 70%);"></div>
+    <div id="toast">Message Sent Successfully!</div>
 
-    <div id="toast"><i class="fas fa-check-circle mr-2"></i> <span id="toast-msg">Action Successful!</span></div>
-
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 px-4 py-6 transition-all duration-300" id="navbar">
-        <div class="max-w-6xl mx-auto flex justify-between items-center glass rounded-full px-6 py-3 shadow-lg">
-            <div class="flex items-center gap-3 cursor-pointer hover:scale-105 transition-transform" onclick="window.scrollTo(0,0)">
-                <!-- YAHAN APP KA ICON DAALEIN -->
-                <img src="assets/icons/QC.png" alt="App Icon" class="w-10 h-10 rounded-xl object-cover shadow-lg shadow-blue-500/30" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="hidden w-10 h-10 rounded-xl items-center justify-center font-black text-white shadow-lg">22</div>
-                <span class="text-blue-500>Quick<span class="text-green-500">code</span></span>
+    <!-- Nav -->
+    <nav class="fixed w-full z-50 px-4 py-4" id="navbar">
+        <div class="max-w-6xl mx-auto glass rounded-full px-6 py-3 flex justify-between items-center shadow-2xl">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-black text-xs">QC</div>
+                <span class="text-xl font-extrabold tracking-tighter">Quick<span class="text-blue-500">Code</span></span>
             </div>
             
-            <div class="hidden md:flex gap-8 font-bold opacity-60 text-sm uppercase tracking-widest">
-                <a href="#features" class="hover:text-blue-500 hover:opacity-100 transition-all">Features</a>
-                <a href="#pricing" class="hover:text-purple-500 hover:opacity-100 transition-all">Pricing</a>
-                <a href="#developer" class="hover:text-pink-500 hover:opacity-100 transition-all">About</a>
-                <a href="#feedback" class="hover:text-green-500 hover:opacity-100 transition-all">Feedback</a>
+            <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest">
+                <a href="#features" class="hover:text-blue-500">Features</a>
+                <a href="#pricing" class="hover:text-blue-500">Pricing</a>
+                <a href="#feedback" class="hover:text-blue-500">Feedback</a>
             </div>
 
-            <div class="flex items-center gap-4">
-                <button id="theme-toggle" class="w-10 h-10 glass rounded-full flex items-center justify-center hover:scale-110 transition-transform">
-                    <i class="fas fa-moon text-lg" id="theme-icon"></i>
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" class="w-10 h-10 rounded-full flex items-center justify-center glass">
+                    <i class="fas fa-moon" id="theme-icon"></i>
                 </button>
-                <!-- ASLI DOWNLOAD LINK -->
-                <a href="QuickCode.apk" download="QuickCode.apk" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-full font-black text-sm shadow-lg shadow-blue-500/30 transition-transform hover:scale-105 active:scale-95 hidden sm:block">
-                    Get APK <i class="fas fa-download ml-1"></i>
-                </a>
+                <a href="QuickCode.apk" class="bg-blue-600 text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform hidden sm:block">Download</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="pt-48 pb-24 px-6 text-center max-w-5xl mx-auto relative z-10">
+    <!-- Hero -->
+    <section class="pt-48 pb-20 px-6 text-center">
         <div class="reveal">
-            <div class="inline-flex items-center gap-2 px-5 py-2 glass rounded-full text-xs font-black tracking-[0.2em] uppercase mb-8 border border-blue-500/30 text-blue-400 shadow-lg shadow-blue-500/10 float-slow">
-                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span>
-                v2.2.0 is now live
-            </div>
-            <h1 class="text-6xl md:text-8xl font-black mb-8 tracking-tighter leading-[1.1]">
-                Make Your Dream <br> Into <span class="gradient-text code-font">&lt;Code/&gt;</span>
-            </h1>
-            <p class="text-xl opacity-60 mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
-                A PC-level Python IDE built entirely for your smartphone. Featuring offline execution, real-time terminal, native PIP manager, and true multitasking.
+            <span class="text-xs font-black tracking-widest uppercase border border-orange-500/30 px-4 py-2 rounded-full text-orange-500 mb-6 inline-block">Made in India with Love</span>
+            <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tighter">Code Anywhere. <br> <span class="text-blue-500">Build Everywhere.</span></h1>
+            <p class="max-w-2xl mx-auto text-lg md:text-xl font-medium mb-10 leading-relaxed">
+                The ultimate Python IDE designed for mobile developers. Native PIP support, split-screen, and offline power.
             </p>
-            <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
-                <!-- DOWNLOAD APK BUTTON -->
-                <a href="QuickCodePro.apk" download="QuickCodePro.apk" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white px-10 py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 shadow-2xl shadow-blue-500/40 transition-transform hover:-translate-y-1 active:scale-95">
-                    <i class="fab fa-android text-2xl"></i> Download APK Now
-                </a>
-                <a href="#pricing" class="w-full sm:w-auto glass px-10 py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition-transform hover:-translate-y-1">
-                    View Pro Plans <i class="fas fa-arrow-right"></i>
-                </a>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="QuickCode.apk" class="bg-white text-black px-10 py-4 rounded-2xl font-black text-lg hover:bg-blue-500 hover:text-white transition-all shadow-xl">Get Started Free</a>
+                <a href="#pricing" class="glass px-10 py-4 rounded-2xl font-black text-lg">View Lifetime Offer</a>
             </div>
         </div>
     </section>
 
-    <!-- App Features -->
-    <section id="features" class="py-24 px-6 max-w-6xl mx-auto">
-        <div class="text-center mb-20 reveal">
-            <span class="text-blue-500 font-black tracking-[0.2em] uppercase text-sm">Capabilities</span>
-            <h2 class="text-4xl md:text-5xl font-black mt-2">Desktop Power in your Pocket.</h2>
+    <!-- Features -->
+    <section id="features" class="py-24 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
+        <div class="glass p-10 rounded-[2rem] reveal">
+            <i class="fas fa-bolt text-orange-500 text-3xl mb-6"></i>
+            <h3 class="text-2xl font-black mb-3">Instant Run</h3>
+            <p>Fastest Python 3.11 execution engine on Android. No lag, just pure performance.</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="glass p-10 rounded-[2.5rem] reveal">
-                <div class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 mb-8 float-slow">
-                    <i class="fas fa-columns text-3xl"></i>
-                </div>
-                <h3 class="text-2xl font-black mb-4">Smart Split-Screen</h3>
-                <p class="opacity-60 text-base leading-relaxed">Rotate your device to enter Landscape mode. Code on two files simultaneously with smart auto-save support.</p>
+        <div class="glass p-10 rounded-[2rem] reveal delay-100">
+            <i class="fas fa-cubes text-blue-500 text-3xl mb-6"></i>
+            <h3 class="text-2xl font-black mb-3">PIP Manager</h3>
+            <p>Install any library like Numpy or Pandas directly. No internet required after setup.</p>
+        </div>
+        <div class="glass p-10 rounded-[2rem] reveal delay-200">
+            <i class="fas fa-code-branch text-green-500 text-3xl mb-6"></i>
+            <h3 class="text-2xl font-black mb-3">Pro Terminal</h3>
+            <p>Full Linux-style terminal for standard inputs and complex script management.</p>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-4xl md:text-6xl font-black tracking-tighter">Choose Your Power</h2>
+            <p class="mt-4 text-lg">Transparent pricing for every stage of your journey.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Free -->
+            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal">
+                <h3 class="text-xl font-black opacity-50 uppercase mb-4 tracking-widest">Starter</h3>
+                <div class="text-5xl font-black mb-8">₹0 <span class="text-base font-medium opacity-40">/forever</span></div>
+                <ul class="space-y-4 mb-10 flex-grow">
+                    <li><i class="fas fa-check text-green-500 mr-2"></i> Python 3.11 Core</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i> Basic File Manager</li>
+                    <li><i class="fas fa-times text-red-500 mr-2"></i> Ad-free Interface</li>
+                    <li><i class="fas fa-times text-red-500 mr-2"></i> Split-Screen Mode</li>
+                </ul>
+                <button class="w-full py-4 glass rounded-xl font-black opacity-50 cursor-not-allowed">Active Plan</button>
             </div>
-            <div class="glass p-10 rounded-[2.5rem] reveal delay-100">
-                <div class="w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-500 mb-8 float-fast">
-                    <i class="fas fa-box-open text-3xl"></i>
-                </div>
-                <h3 class="text-2xl font-black mb-4">Native PIP Manager</h3>
-                <p class="opacity-60 text-base leading-relaxed">Install any Python library directly to your local isolated QCA folder. No internet needed to run them later.</p>
+
+            <!-- Lifetime (Exclusive) -->
+            <div class="glass p-8 rounded-[2.5rem] flex flex-col lifetime-glow reveal delay-100 scale-105 z-10">
+                <div class="limited-badge">🔥 EARLY BIRD: FIRST 100 USERS ONLY</div>
+                <h3 class="text-xl font-black text-orange-500 uppercase mb-4 tracking-widest">Lifetime Deal</h3>
+                <div class="text-5xl font-black mb-2">₹99 <span class="text-base font-medium opacity-40">/once</span></div>
+                <p class="text-xs font-bold text-orange-400 mb-8">Grab it before it becomes Monthly!</p>
+                <ul class="space-y-4 mb-10 flex-grow text-important font-bold">
+                    <li><i class="fas fa-infinity text-orange-500 mr-2"></i> <strong>Everything Forever</strong></li>
+                    <li><i class="fas fa-ban text-orange-500 mr-2"></i> Zero Ads & Popups</li>
+                    <li><i class="fas fa-columns text-orange-500 mr-2"></i> Split-Screen Support</li>
+                    <li><i class="fas fa-cloud text-orange-500 mr-2"></i> Early Beta Access</li>
+                </ul>
+                <a href="QuickCode.apk" class="w-full py-4 bg-orange-500 text-white text-center rounded-xl font-black shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform">Get Lifetime Now</a>
             </div>
-            <div class="glass p-10 rounded-[2.5rem] reveal delay-200">
-                <div class="w-16 h-16 bg-green-500/10 rounded-2xl flex items-center justify-center text-green-500 mb-8 float-slow">
-                    <i class="fas fa-terminal text-3xl"></i>
-                </div>
-                <h3 class="text-2xl font-black mb-4">Interactive Terminal</h3>
-                <p class="opacity-60 text-base leading-relaxed">A real-time console that handles standard inputs, CMD commands, and real-time script outputs flawlessly.</p>
+
+            <!-- Monthly -->
+            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal delay-200">
+                <h3 class="text-xl font-black text-blue-500 uppercase mb-4 tracking-widest">Monthly</h3>
+                <div class="text-5xl font-black mb-8">₹99 <span class="text-base font-medium opacity-40">/month</span></div>
+                <ul class="space-y-4 mb-10 flex-grow">
+                    <li><i class="fas fa-check text-blue-500 mr-2"></i> Ad-free Interface</li>
+                    <li><i class="fas fa-check text-blue-500 mr-2"></i> Split-Screen Support</li>
+                    <li><i class="fas fa-check text-blue-500 mr-2"></i> Full PIP Library Access</li>
+                    <li><i class="fas fa-check text-blue-500 mr-2"></i> Cloud Sync Support</li>
+                </ul>
+                <a href="QuickCode.apk" class="w-full py-4 glass text-center rounded-xl font-black hover:bg-blue-600 hover:text-white transition-all">Subscribe</a>
             </div>
         </div>
     </section>
 
-    <!-- Highly Professional Pricing Section -->
-    <section id="pricing" class="py-24 px-6 max-w-5xl mx-auto">
-        <div class="text-center mb-20 reveal">
-            <span class="text-purple-500 font-black tracking-[0.2em] uppercase text-sm">Pricing</span>
-            <h2 class="text-4xl md:text-5xl font-black mt-2">Unlock Your True Potential</h2>
-            <p class="opacity-60 mt-4 text-lg">No hidden fees. Upgrade once, code forever.</p>
-        </div>
-
-        <div class="grid lg:grid-cols-2 gap-10 items-center">
-            
-            <!-- Free Tier Card -->
-            <div class="glass p-10 rounded-[3rem] reveal border-t-4 border-gray-600 flex flex-col h-full justify-between">
-                <div>
-                    <span class="bg-gray-800 text-gray-300 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Starter</span>
-                    <h3 class="text-3xl font-black mt-6 mb-2">Free Tier</h3>
-                    <div class="text-5xl font-black mb-8">₹0 <span class="text-lg opacity-40 font-medium">/forever</span></div>
-                    <p class="opacity-60 text-sm mb-8 border-b border-white/10 pb-8">Perfect for beginners learning Python basics on their smartphone.</p>
-                    
-                    <ul class="pricing-list text-base font-semibold mb-10">
-                        <li><span class="w-8 flex justify-center"><i class="fas fa-ad text-yellow-500"></i></span> <span class="opacity-80">Ads: Yes (Small Banners)</span></li>
-                        <li><span class="w-8 flex justify-center"><i class="fas fa-times text-red-500 opacity-60"></i></span> <span class="opacity-50 line-through">Split Screen Multitasking</span></li>
-                        <li><span class="w-8 flex justify-center"><i class="fas fa-times text-red-500 opacity-60"></i></span> <span class="opacity-50 line-through">Cloud Sync Backup</span></li>
-                        <li><span class="w-8 flex justify-center"><i class="fas fa-palette text-gray-400"></i></span> <span class="opacity-80">Themes: Basic Light/Dark</span></li>
-                        <li><span class="w-8 flex justify-center"><i class="fas fa-box text-gray-400"></i></span> <span class="opacity-80">Pip Library: Pre-installed Only</span></li>
-                        <li><span class="w-8 flex justify-center"><i class="fas fa-history text-gray-400"></i></span> <span class="opacity-80">CMD History: Last One Only</span></li>
-                    </ul>
-                </div>
-                <button class="w-full glass py-4 rounded-xl font-black opacity-50 cursor-not-allowed">Current Plan</button>
-            </div>
-
-            <!-- Pro Tier Card (Animated Glow) -->
-            <div class="pro-card-wrapper reveal delay-100 h-full">
-                <div class="bg-[#0a0a0a] p-10 rounded-[2.4rem] h-full flex flex-col justify-between relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-purple-600 text-white text-xs font-black px-8 py-2 rounded-bl-3xl uppercase tracking-widest shadow-lg">Most Popular</div>
-                    
-                    <div>
-                        <span class="bg-blue-500/20 text-blue-400 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Professional</span>
-                        <h3 class="text-3xl font-black mt-6 mb-2 gradient-text">Pro Tier</h3>
-                        <div class="text-5xl font-black mb-8 text-white">₹99 <span class="text-lg opacity-50 font-medium text-white">/mo</span></div>
-                        <p class="opacity-70 text-sm mb-8 border-b border-white/10 pb-8">For serious developers who need desktop-level multitasking and power.</p>
-                        
-                        <ul class="pricing-list text-base font-bold mb-10">
-                            <li><span class="w-8 flex justify-center"><i class="fas fa-ban text-green-400"></i></span> <span class="text-green-400">No Ads (Clean Experience)</span></li>
-                            <li><span class="w-8 flex justify-center"><i class="fas fa-columns text-blue-400"></i></span> <span class="text-white">Split Screen (Multitasking)</span></li>
-                            <li><span class="w-8 flex justify-center"><i class="fas fa-cloud-upload-alt text-blue-400"></i></span> <span class="text-white">Cloud Sync (Safe Backup)</span></li>
-                            <li><span class="w-8 flex justify-center"><i class="fas fa-paint-brush text-purple-400"></i></span> <span class="text-purple-300">Advance Themes (Neon, Retro)</span></li>
-                            <li><span class="w-8 flex justify-center"><i class="fas fa-unlock-alt text-yellow-400"></i></span> <span class="text-yellow-300">Pip Library: Full Access</span></li>
-                            <li><span class="w-8 flex justify-center"><i class="fas fa-infinity text-blue-400"></i></span> <span class="text-blue-300">CMD History: Unlimited</span></li>
-                        </ul>
-                    </div>
-                    <!-- PRO DOWNLOAD BUTTON -->
-                    <a href="QuickCodePro.apk" download="QuickCodePro.apk" class="w-full text-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white py-4 rounded-xl font-black text-lg shadow-xl shadow-blue-500/30 transition-transform hover:-translate-y-1 block active:scale-95">
-                        Upgrade inside App <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Meet the Developer Section -->
+    <!-- Developer -->
     <section id="developer" class="py-24 px-6">
-        <div class="max-w-6xl mx-auto glass rounded-[4rem] p-8 md:p-20 reveal relative overflow-hidden border border-blue-500/20 shadow-2xl shadow-blue-900/10">
-            <div class="absolute top-0 right-0 p-10 opacity-5 pointer-events-none">
-                <i class="fas fa-quote-right text-[150px]"></i>
+        <div class="max-w-5xl mx-auto glass p-10 md:p-16 rounded-[3rem] flex flex-col md:flex-row items-center gap-12 reveal">
+            <div class="w-48 h-48 md:w-64 md:h-64 rounded-[2rem] overflow-hidden rotate-3 shadow-2xl border-4 border-white/5">
+                <img src="AGTech.jpg" class="w-full h-full object-cover" alt="Akash" onerror="this.src='https://ui-avatars.com/api/?name=Akash+Agrawal&background=3b82f6&color=fff'">
             </div>
-            
-            <div class="flex flex-col lg:flex-row gap-16 items-center relative z-10">
-                <!-- YAHAN APNI PHOTO DAALEIN -->
-                <div class="w-56 h-56 md:w-80 md:h-80 rounded-[3rem] bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shrink-0 overflow-hidden p-1.5 float-slow shadow-2xl">
-                    <img src="AGTech.jpg" alt="Akash Agrawal" class="w-full h-full object-cover rounded-[2.8rem]" onerror="this.src='https://ui-avatars.com/api/?name=Akash+Agrawal&size=512&background=050505&color=fff'">
-                </div>
-                
-                <div class="text-center lg:text-left">
-                    <span class="text-sm font-black text-blue-500 uppercase tracking-[0.3em] mb-4 block"><i class="fas fa-code-branch mr-2"></i> Manager & Developer</span>
-                    <h2 class="text-4xl md:text-6xl font-black mb-8 tracking-tighter italic">"A Journey from the <br> Modern Village."</h2>
-                    <div class="text-lg opacity-70 leading-relaxed space-y-6 font-medium">
-                        <p>
-                            Coming from a background rooted in the values of the <strong>Modern Village</strong> and deeply inspired by the principles of <strong>Maharaja Agrasen Ji</strong>, I noticed a massive gap in technology access.
-                        </p>
-                        <p>
-                            While expensive laptops aren't available to everyone, smartphones are everywhere. QuickCode Pro wasn't just built to be an app; it was built as a mission to democratize computing and empower the next generation of creators.
-                        </p>
-                    </div>
-                    <div class="flex flex-wrap gap-4 justify-center lg:justify-start mt-10">
-                        <div class="px-5 py-2.5 glass rounded-full text-xs font-black uppercase tracking-widest text-blue-400 shadow-lg"><i class="fas fa-eye mr-2"></i> Visionary</div>
-                        <div class="px-5 py-2.5 glass rounded-full text-xs font-black uppercase tracking-widest text-purple-400 shadow-lg"><i class="fas fa-building mr-2"></i> 22 Company</div>
-                    </div>
+            <div class="flex-1">
+                <span class="text-blue-500 font-black uppercase tracking-widest text-sm mb-4 block">The Developer</span>
+                <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter italic">Akash Agrawal</h2>
+                <p class="text-lg leading-relaxed opacity-80 mb-6">
+                    "From a small village with big dreams, I created Quick Code to ensure coding is accessible to everyone. Your phone is more powerful than you think—I'm just helping you unlock it."
+                </p>
+                <div class="flex gap-4">
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase">22 Company</span>
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase text-orange-500">Proudly Indian</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Feedback Section -->
-    <section id="feedback" class="py-24 px-6 relative">
-        <div class="max-w-3xl mx-auto glass p-10 md:p-16 rounded-[3.5rem] reveal shadow-2xl">
-            <div class="text-center mb-12">
-                <span class="text-green-500 font-black tracking-[0.2em] uppercase text-sm">Contact</span>
-                <h2 class="text-4xl font-black mt-2 mb-4">Let's Connect</h2>
-                <p class="text-base opacity-60">We value your insights, bug reports, and feature requests.</p>
+    <!-- Feedback -->
+    <section id="feedback" class="py-24 px-6 max-w-3xl mx-auto">
+        <div class="glass p-10 rounded-[3rem] reveal">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-black">Let's Connect</h2>
+                <p>Have a bug report or a feature request?</p>
             </div>
-            
-            <form action="https://formsubmit.co/quickcode.by.22@gmail.com" method="POST" class="space-y-6">
-                <div class="grid md:grid-cols-2 gap-5">
-                    <input type="text" name="name" required placeholder="Your Name" class="input-field...">
-                    <input type="email" name="email" required placeholder="Your Email" class="input-field...">
+            <form action="https://formsubmit.co/quickcode.by.22@gmail.com" method="POST" class="space-y-4" onsubmit="return handleForm(event)">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <input type="text" name="name" placeholder="Full Name" required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500">
+                    <input type="email" name="email" placeholder="Email Address" required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500">
                 </div>
-                <div>
-                    <textarea name="message" required placeholder="Write your message here..." rows="5" class="input-field..."></textarea>
-                </div>
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_next" value="https://agtech-g.github.io/QuickCode/#feedback">
-                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white py-5 rounded-[1.5rem] font-black text-xl shadow-xl shadow-blue-500/20 transition-all hover:-translate-y-1 active:scale-95">
-                    Send Message <i class="fas fa-paper-plane ml-2"></i>
-                </button>
+                <textarea name="message" rows="5" placeholder="Message..." required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500"></textarea>
+                <input type="hidden" name="_captcha" value="false">
+                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black text-lg hover:scale-[1.02] transition-transform">Send to Developer</button>
             </form>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-12 px-6 border-t border-white/10 text-center mt-10">
-        <div class="max-w-4xl mx-auto flex flex-col items-center">
-            <div class="text-2xl font-black tracking-tighter mb-4">QuickCode <span class="text-blue-500">Pro</span></div>
-            <p class="text-xs opacity-40 font-bold uppercase tracking-[0.2em] mb-6">A Product by 22 Company</p>
-            <p class="text-sm opacity-50">&copy; 2024 All Rights Reserved. Harvesting Potential Everywhere.</p>
+    <footer class="py-12 border-t border-white/10 text-center">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-xl font-black tracking-tighter mb-4">Quick<span class="text-blue-500">Code</span></div>
+            <p class="text-xs font-bold opacity-40 uppercase tracking-[0.3em]">&copy; 2024 22 Company | Harvesting Potential Everywhere</p>
         </div>
     </footer>
 
     <script>
-        // Scroll Reveal Logic with Intersection Observer
-        const revealCallback = (entries) => {
+        // Reveal logic
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('active');
             });
-        };
-        const observer = new IntersectionObserver(revealCallback, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+        }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Theme Toggle Logic (Sleek Switch)
+        // Theme Toggle
         const themeBtn = document.getElementById('theme-toggle');
-        const themeIcon = document.getElementById('theme-icon');
-        
         themeBtn.addEventListener('click', () => {
             document.body.classList.toggle('light-theme');
+            const icon = document.getElementById('theme-icon');
             if (document.body.classList.contains('light-theme')) {
-                themeIcon.className = 'fas fa-sun text-yellow-500';
+                icon.className = 'fas fa-sun text-orange-500';
             } else {
-                themeIcon.className = 'fas fa-moon text-white';
+                icon.className = 'fas fa-moon';
             }
         });
 
-        // Form Handling & Custom Toast Notification
-        function handleSubmit(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalHTML = btn.innerHTML;
-            
-            btn.innerHTML = "Transmitting... <i class='fas fa-spinner fa-spin ml-2'></i>";
-            btn.disabled = true;
-            btn.classList.add('opacity-70', 'cursor-not-allowed');
-
-            // Simulating API Call
-            setTimeout(() => {
-                showToast("Feedback Sent Successfully! We'll review it soon.");
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
-                btn.classList.remove('opacity-70', 'cursor-not-allowed');
-                e.target.reset();
-            }, 1500);
-            
-            return false;
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById("toast");
-            const toastMsg = document.getElementById("toast-msg");
-            toastMsg.innerText = msg;
-            toast.classList.add("show");
-            
-            // Hide toast after 4 seconds
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 4000);
-        }
-
-        // Dynamic Navbar Blur on Scroll
+        // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('#navbar > div');
             if (window.scrollY > 50) {
+                nav.style.backgroundColor = document.body.classList.contains('light-theme') ? "rgba(255,255,255,0.9)" : "rgba(10,10,10,0.9)";
                 nav.classList.add('py-2');
-                nav.classList.remove('py-3');
-                nav.style.backgroundColor = document.body.classList.contains('light-theme') ? "rgba(255,255,255,0.8)" : "rgba(5, 5, 5, 0.8)";
             } else {
-                nav.classList.add('py-3');
-                nav.classList.remove('py-2');
                 nav.style.backgroundColor = "";
+                nav.classList.remove('py-2');
             }
         });
+
+        // Form Submission
+        function handleForm(e) {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+            return true;
+        }
     </script>
 </body>
 </html>
