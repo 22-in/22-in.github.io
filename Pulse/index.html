@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulse | Smart Health AI IDE for your Body</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Fonts same as Quick Code -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg: #050505;
+            --text: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --saffron: #FF9933;
+            --india-green: #138808;
+            --pulse-red: #ff4b2b;
+            --ai-purple: #8a2be2;
+        }
+
+        .light-theme {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --text-dim: #475569;
+            --card-bg: #ffffff;
+            --border: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: all 0.4s ease;
+            background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
+            background-size: 32px 32px;
+        }
+
+        .code-font { font-family: 'JetBrains Mono', monospace; }
+
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        .glass:hover { transform: translateY(-5px); border-color: var(--saffron); }
+
+        .gradient-text {
+            background: linear-gradient(to right, var(--saffron), #ffffff, var(--india-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradientAnim 4s linear infinite;
+        }
+        @keyframes gradientAnim {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .heartbeat {
+            animation: beat 1.5s infinite;
+        }
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: 0.6s all ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        #toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--india-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 1000;
+            transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-weight: 700;
+        }
+        #toast.show { bottom: 40px; }
+
+        .ai-glow {
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
+            border: 1px solid var(--ai-purple) !important;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+
+    <div id="toast">Connecting to Pulse Server...</div>
+
+    <!-- Nav -->
+    <nav class="fixed w-full z-50 px-4 py-4" id="navbar">
+        <div class="max-w-6xl mx-auto glass rounded-full px-6 py-3 flex justify-between items-center shadow-2xl">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white font-black text-xs heartbeat">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <span class="text-xl font-extrabold tracking-tighter">PULSE<span class="text-orange-500">.AI</span></span>
+            </div>
+            
+            <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest">
+                <a href="#features" class="hover:text-orange-500">Sensors</a>
+                <a href="#ai-tech" class="hover:text-orange-500">Personalized AI</a>
+                <a href="#pricing" class="hover:text-orange-500">Get Pro</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" class="w-10 h-10 rounded-full flex items-center justify-center glass">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+                <a href="#" class="bg-orange-500 text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform">Install App</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="pt-48 pb-20 px-6 text-center">
+        <div class="reveal">
+            <span class="text-xs font-black tracking-widest uppercase border border-orange-500/30 px-4 py-2 rounded-full text-orange-500 mb-6 inline-block">Bharat's First AI Wearable OS</span>
+            <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tighter">Your Heartbeat <br> <span class="gradient-text code-font">Meets Intelligence.</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-lg md:text-xl font-medium mb-10 leading-relaxed">
+                Pulse transforms your smartwatch into a lifesaver. Real-time sensor monitoring fused with AI that knows you better than yourself.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#features" class="bg-white text-black px-10 py-4 rounded-2xl font-black text-lg hover:bg-orange-500 hover:text-white transition-all shadow-xl">Watch Sensors</a>
+                <a href="#pricing" class="glass px-10 py-4 rounded-2xl font-black text-lg">Lifetime Offer ₹99</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Feature Spotlight (The unique part) -->
+    <section id="ai-tech" class="py-24 px-6 max-w-6xl mx-auto">
+        <div class="ai-glow glass p-10 md:p-16 rounded-[3rem] text-center reveal">
+            <h2 class="text-3xl md:text-5xl font-black mb-6">Context-Aware <span class="text-purple-500">AI</span></h2>
+            <p class="text-xl max-w-3xl mx-auto mb-10 opacity-80">
+                Pulse doesn't just answer your questions. It attaches your <span class="text-orange-500 font-bold">Heart Rate, SpO2, and Stress levels</span> to every query, giving you medical-grade personalized insights.
+            </p>
+            <div class="grid md:grid-cols-2 gap-8 text-left">
+                <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                    <p class="text-xs font-bold text-purple-400 mb-2 uppercase tracking-widest">Normal AI asks:</p>
+                    <p class="italic text-lg">"Give me a workout plan."</p>
+                </div>
+                <div class="bg-purple-500/10 p-6 rounded-2xl border border-purple-500/30">
+                    <p class="text-xs font-bold text-orange-400 mb-2 uppercase tracking-widest">Pulse AI answers:</p>
+                    <p class="italic text-lg">"Your heart rate is 110bpm & stress is high. Instead of a workout, let's do 5 mins of box breathing."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="py-24 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
+        <div class="glass p-10 rounded-[2rem] reveal">
+            <i class="fas fa-microchip text-orange-500 text-3xl mb-6"></i>
+            <h3 class="text-2xl font-black mb-3">Live Sensor Sync</h3>
+            <p>Direct low-latency access to heart rate, pedometer, and sleep sensors via Bluetooth LE.</p>
+        </div>
+        <div class="glass p-10 rounded-[2rem] reveal delay-100">
+            <i class="fas fa-bell text-red-500 text-3xl mb-6"></i>
+            <h3 class="text-2xl font-black mb-3">Instant Alerts</h3>
+            <p>Emergency SOS triggers if sensors detect irregular patterns or sudden falls.</p>
+        </div>
+        <div class="glass p-10 rounded-[2rem] reveal delay-200">
+            <i class="fas fa-brain text-green-500 text-3xl mb-6"></i>
+            <h3 class="text-2xl font-black mb-3">Personalized Brain</h3>
+            <p>Every response is tuned to your physical state at that exact millisecond.</p>
+        </div>
+    </section>
+
+    <!-- Pricing (Same as your Quick Code) -->
+    <section id="pricing" class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-4xl md:text-6xl font-black tracking-tighter">Invest in Your Health</h2>
+            <p class="mt-4 text-lg">One time payment. Lifetime peace of mind.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal">
+                <h3 class="text-xl font-black opacity-50 uppercase mb-4 tracking-widest">Base</h3>
+                <div class="text-5xl font-black mb-8">₹0 <span class="text-base font-medium opacity-40">/free</span></div>
+                <ul class="space-y-4 mb-10 flex-grow">
+                    <li><i class="fas fa-check text-green-500 mr-2"></i> Real-time HR Sync</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i> Daily Health Logs</li>
+                    <li><i class="fas fa-times text-red-500 mr-2"></i> AI Personalization</li>
+                </ul>
+                <button class="w-full py-4 glass rounded-xl font-black">Download Free</button>
+            </div>
+
+            <div class="glass p-8 rounded-[2.5rem] flex flex-col border-2 border-orange-500/50 reveal delay-100 scale-105 z-10 shadow-2xl shadow-orange-500/10">
+                <div class="bg-gradient-to-r from-orange-500 to-green-600 text-white text-[10px] py-1 px-4 rounded-full absolute -top-3 left-1/2 -translate-x-1/2 font-black">LAUNCH OFFER</div>
+                <h3 class="text-xl font-black text-orange-500 uppercase mb-4 tracking-widest">Pulse Pro</h3>
+                <div class="text-5xl font-black mb-2">₹99 <span class="text-base font-medium opacity-40">/once</span></div>
+                <p class="text-xs font-bold text-orange-400 mb-8">Exclusive for first 500 users</p>
+                <ul class="space-y-4 mb-10 flex-grow font-bold">
+                    <li><i class="fas fa-infinity text-orange-500 mr-2"></i> <strong>Everything Forever</strong></li>
+                    <li><i class="fas fa-robot text-orange-500 mr-2"></i> Full AI Integration</li>
+                    <li><i class="fas fa-phone-alt text-orange-500 mr-2"></i> Emergency SOS Calls</li>
+                    <li><i class="fas fa-history text-orange-500 mr-2"></i> Lifetime Data Backup</li>
+                </ul>
+                <button class="w-full py-4 bg-orange-500 text-white rounded-xl font-black hover:scale-105 transition-transform">Buy Lifetime</button>
+            </div>
+
+            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal delay-200">
+                <h3 class="text-xl font-black text-blue-500 uppercase mb-4 tracking-widest">Team</h3>
+                <div class="text-5xl font-black mb-8">₹499 <span class="text-base font-medium opacity-40">/family</span></div>
+                <ul class="space-y-4 mb-10 flex-grow">
+                    <li><i class="fas fa-users text-blue-500 mr-2"></i> Up to 5 Members</li>
+                    <li><i class="fas fa-chart-line text-blue-500 mr-2"></i> Shared Health Dashboard</li>
+                    <li><i class="fas fa-shield-alt text-blue-500 mr-2"></i> Remote Alerts</li>
+                </ul>
+                <button class="w-full py-4 glass rounded-xl font-black hover:bg-blue-600 hover:text-white transition-all">Select Plan</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Developer (Personal Touch) -->
+    <section id="developer" class="py-24 px-6">
+        <div class="max-w-5xl mx-auto glass p-10 md:p-16 rounded-[3rem] flex flex-col md:flex-row items-center gap-12 reveal">
+            <div class="w-48 h-48 md:w-64 md:h-64 rounded-[2rem] overflow-hidden -rotate-3 shadow-2xl border-4 border-white/5">
+                <img src="AGTech.jpg" class="w-full h-full object-cover" alt="Akash" onerror="this.src='https://ui-avatars.com/api/?name=Akash+Agrawal&background=FF9933&color=fff'">
+            </div>
+            <div class="flex-1">
+                <span class="text-orange-500 font-black uppercase tracking-widest text-sm mb-4 block">The Visionary</span>
+                <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter italic">Akash Agrawal</h2>
+                <p class="text-lg leading-relaxed opacity-80 mb-6">
+                    "Technology shouldn't just be on your wrist; it should understand your soul. Pulse is my attempt to bridge the gap between human biology and artificial intelligence."
+                </p>
+                <div class="flex gap-4">
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase border-orange-500/20">Pulse OS v1.0</span>
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase text-orange-500">22 Company</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer same as Quick Code -->
+    <footer class="py-12 border-t border-white/10 text-center">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-xl font-black tracking-tighter mb-4">PULSE<span class="text-orange-500">.AI</span></div>
+            <p class="text-xs font-bold opacity-40 uppercase tracking-[0.3em]">&copy; 2024 22 Company | Harvesting Health Everywhere</p>
+        </div>
+    </footer>
+
+    <script>
+        // Copy-pasted your smooth logic for consistency
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        const themeBtn = document.getElementById('theme-toggle');
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            const icon = document.getElementById('theme-icon');
+            if (document.body.classList.contains('light-theme')) {
+                icon.className = 'fas fa-sun text-orange-500';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('#navbar > div');
+            if (window.scrollY > 50) {
+                nav.style.backgroundColor = document.body.classList.contains('light-theme') ? "rgba(255,255,255,0.9)" : "rgba(10,10,10,0.9)";
+            } else {
+                nav.style.backgroundColor = "";
+            }
+        });
+    </script>
+</body>
+</html>
