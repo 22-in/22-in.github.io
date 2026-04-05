@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Code | Ultimate Mobile Python IDE</title>
+    <title>Quick Code | Build your Dream into Code.</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="./assets/icons/sitelogo.png">
@@ -72,7 +72,6 @@
             100% { background-position: 200% center; }
         }
 
-        
         .limited-badge {
             background: linear-gradient(90deg, var(--saffron), var(--india-green));
             color: white;
@@ -106,18 +105,61 @@
             font-weight: 700;
         }
         #toast.show { bottom: 40px; }
+
+        /* --- NEW: Congratulations Popup --- */
+        #downloadModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+
+        /* --- NEW: Advanced Screenshots 3D Effect --- */
+        .ss-container { perspective: 1000px; }
+        .ss-mockup {
+            border-radius: 1.5rem;
+            border: 6px solid #111;
+            background: #000;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            transition: all 0.5s ease;
+            transform: rotateY(-10deg) rotateX(5deg);
+        }
+        .ss-mockup:hover {
+            transform: rotateY(0deg) rotateX(0deg) scale(1.05);
+            border-color: var(--code-blue);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+        }
+        .light-theme .ss-mockup { border-color: #cbd5e1; }
     </style>
 </head>
 <body class="dark-theme">
 
+    <!-- Toast for Feedback Form -->
     <div id="toast">Message Sent Successfully!</div>
+
+    <!-- NEW: Download Congratulations Popup -->
+    <div id="downloadModal" class="p-4">
+        <div class="glass max-w-md w-full p-8 rounded-[2rem] text-center relative border-blue-500/50">
+            <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-500/30">
+                <i class="fas fa-check text-white text-2xl"></i>
+            </div>
+            <h2 class="text-3xl font-black mb-2 text-white">Congratulations!</h2>
+            <p class="mb-6 opacity-80 text-white">Your download has started. Get ready to code anywhere with Quick Code.</p>
+            <button onclick="closeModal()" class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all">Okay, Awesome!</button>
+        </div>
+    </div>
 
     <!-- Nav -->
     <nav class="fixed w-full z-50 px-4 py-4" id="navbar">
         <div class="max-w-6xl mx-auto glass rounded-full px-6 py-3 flex justify-between items-center shadow-2xl">
-            <!-- Updated Logo Section -->
+            <!-- Dynamic Logo -->
             <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
-                <img src="./assets/icons/sitelogo.png" alt="QuickCode Logo" class="w-8 h-8 rounded-lg object-cover shadow-sm">
+                <img id="nav-logo" src="./assets/icons/wlogo.png" alt="QuickCode Logo" class="w-8 h-8 rounded-lg object-cover shadow-sm">
                 <span class="text-xl font-extrabold tracking-tighter">Quick<span class="text-blue-500">Code</span></span>
             </div>
             
@@ -132,13 +174,13 @@
                 <button id="theme-toggle" class="w-10 h-10 rounded-full flex items-center justify-center glass hover:bg-gray-800/50 transition-all">
                     <i class="fas fa-moon" id="theme-icon"></i>
                 </button>
-                <a href="QuickCode.apk" class="bg-blue-600 text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-lg shadow-blue-500/30 hidden sm:block">Download</a>
+                <a href="QuickCode.apk" onclick="showDownloadMsg(event)" class="bg-blue-600 text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-lg shadow-blue-500/30 hidden sm:block">Download</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero -->
-    <section class="pt-48 pb-20 px-6 text-center">
+    <section class="pt-32 pb-16 px-6 text-center">
         <div class="reveal">
             <span class="text-xs font-black tracking-widest uppercase border border-orange-500/30 px-4 py-2 rounded-full text-orange-500 mb-6 inline-block">Made in India with Love</span>
             <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tighter">Code Anywhere. <br> <span class="gradient-text code-font">&lt;Build Everywhere./&gt;</span>
@@ -147,14 +189,36 @@
                 The ultimate mobile Python IDE. Run complex scripts effortlessly, execute advanced tools flawlessly, and enjoy desktop-grade performance without any lag or crashes.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="QuickCode.apk" class="bg-white text-black px-10 py-4 rounded-2xl font-black text-lg hover:bg-blue-500 hover:text-white transition-all shadow-xl">Get Started Free</a>
+                <a href="QuickCode.apk" onclick="showDownloadMsg(event)" class="bg-white text-black px-10 py-4 rounded-2xl font-black text-lg hover:bg-blue-500 hover:text-white transition-all shadow-xl">Get Started Free</a>
                 <a href="#pricing" class="glass px-10 py-4 rounded-2xl font-black text-lg">View Lifetime Offer</a>
             </div>
         </div>
     </section>
 
+    <!-- NEW: Advanced Screenshots Interface -->
+    <section class="py-16 px-6 max-w-6xl mx-auto ss-container overflow-hidden">
+        <div class="text-center mb-12 reveal">
+            <h2 class="text-4xl font-black tracking-tighter">App Interface</h2>
+            <p class="mt-2 text-lg">Pro desktop-grade coding experience right on your screen.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal">
+            <!-- Screen 1 -->
+            <div class="ss-mockup group">
+                <img src="./assets/screenshots/screen1.png" alt="Editor" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/400x800/111/fff?text=Smart+Editor'">
+            </div>
+            <!-- Screen 2 (Center Pop) -->
+            <div class="ss-mockup group md:-translate-y-8 z-10">
+                <img src="./assets/screenshots/screen2.png" alt="Terminal" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/400x800/111/fff?text=Pro+Terminal'">
+            </div>
+            <!-- Screen 3 -->
+            <div class="ss-mockup group">
+                <img src="./assets/screenshots/screen3.png" alt="File Manager" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/400x800/111/fff?text=Package+Manager'">
+            </div>
+        </div>
+    </section>
+
     <!-- Features -->
-    <section id="features" class="py-24 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
+    <section id="features" class="py-16 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
         <div class="glass p-10 rounded-[2rem] reveal">
             <i class="fas fa-rocket text-orange-500 text-3xl mb-6"></i>
             <h3 class="text-2xl font-black mb-3">Ultra-Smooth Engine</h3>
@@ -173,13 +237,12 @@
     </section>
 
     <!-- Pricing -->
-    <section id="pricing" class="py-24 px-6 max-w-5xl mx-auto">
+    <section id="pricing" class="py-16 px-6 max-w-5xl mx-auto">
         <div class="text-center mb-16 reveal">
             <h2 class="text-4xl md:text-6xl font-black tracking-tighter">Choose Your Power</h2>
             <p class="mt-4 text-lg">Transparent pricing. No hidden fees. Just pure coding.</p>
         </div>
 
-        <!-- Optimized Grid for 2 Cards -->
         <div class="grid md:grid-cols-2 gap-8 items-center">
             <!-- Free -->
             <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal h-full">
@@ -206,13 +269,13 @@
                     <li><i class="fas fa-ban text-orange-500 mr-2"></i> Zero Ads & Popups</li>
                     <li><i class="fas fa-columns text-orange-500 mr-2"></i> Split-Screen Support</li>
                 </ul>
-                <a href="QuickCode.apk" class="w-full py-4 bg-orange-500 text-white text-center rounded-xl font-black shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform">Get Lifetime Now</a>
+                <a href="QuickCode.apk" onclick="showDownloadMsg(event)" class="w-full py-4 bg-orange-500 text-white text-center rounded-xl font-black shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform">Get Lifetime Now</a>
             </div>
         </div>
     </section>
 
     <!-- Developer -->
-    <section id="developer" class="py-24 px-6">
+    <section id="developer" class="py-16 px-6">
         <div class="max-w-5xl mx-auto glass p-10 md:p-16 rounded-[3rem] flex flex-col md:flex-row items-center gap-12 reveal border-t border-white/5">
             <div class="w-48 h-48 md:w-64 md:h-64 rounded-[2rem] overflow-hidden rotate-3 shadow-2xl border-4 border-white/10 shrink-0">
                 <img src="AGTech.jpg" class="w-full h-full object-cover" alt="Akash" onerror="this.src='https://ui-avatars.com/api/?name=Akash+Agrawal&background=3b82f6&color=fff'">
@@ -233,7 +296,7 @@
     </section>
 
     <!-- Feedback -->
-    <section id="feedback" class="py-24 px-6 max-w-3xl mx-auto">
+    <section id="feedback" class="py-16 px-6 max-w-3xl mx-auto">
         <div class="glass p-10 rounded-[3rem] reveal">
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-black">Let's Connect</h2>
@@ -269,15 +332,20 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Theme Toggle
+        // Theme Toggle & Dynamic Logo
         const themeBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const navLogo = document.getElementById('nav-logo');
+
         themeBtn.addEventListener('click', () => {
             document.body.classList.toggle('light-theme');
-            const icon = document.getElementById('theme-icon');
+            
             if (document.body.classList.contains('light-theme')) {
-                icon.className = 'fas fa-sun text-orange-500';
+                themeIcon.className = 'fas fa-sun text-orange-500';
+                navLogo.src = './assets/icons/QC.png'; // Light theme pe logo
             } else {
-                icon.className = 'fas fa-moon';
+                themeIcon.className = 'fas fa-moon';
+                navLogo.src = './assets/icons/wQC.png'; // Dark theme pe wlogo
             }
         });
 
@@ -293,13 +361,23 @@
             }
         });
 
-        // Form Submission
+        // Form Submission Toast
         function handleForm(e) {
             const toast = document.getElementById('toast');
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 4000);
             return true;
         }
+
+        // Popup Logic
+        function showDownloadMsg(e) {
+            // Link naturally run hoga (.apk download start hogi), uske sath popup dikhega
+            document.getElementById('downloadModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('downloadModal').style.display = 'none';
+        }
     </script>
 </body>
-    </html>
+</html>
