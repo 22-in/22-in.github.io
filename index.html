@@ -115,22 +115,24 @@
     <!-- Nav -->
     <nav class="fixed w-full z-50 px-4 py-4" id="navbar">
         <div class="max-w-6xl mx-auto glass rounded-full px-6 py-3 flex justify-between items-center shadow-2xl">
-            <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-black text-xs">QC</div>
+            <!-- Updated Logo Section -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <img src="./assets/icons/sitelogo.png" alt="QuickCode Logo" class="w-8 h-8 rounded-lg object-cover shadow-sm">
                 <span class="text-xl font-extrabold tracking-tighter">Quick<span class="text-blue-500">Code</span></span>
             </div>
             
             <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest">
-                <a href="#features" class="hover:text-blue-500">Features</a>
-                <a href="#pricing" class="hover:text-blue-500">Pricing</a>
-                <a href="#feedback" class="hover:text-blue-500">Feedback</a>
+                <a href="#features" class="hover:text-blue-500 transition-colors">Features</a>
+                <a href="#pricing" class="hover:text-blue-500 transition-colors">Pricing</a>
+                <a href="#developer" class="hover:text-blue-500 transition-colors">Founder</a>
+                <a href="#feedback" class="hover:text-blue-500 transition-colors">Feedback</a>
             </div>
 
             <div class="flex items-center gap-3">
-                <button id="theme-toggle" class="w-10 h-10 rounded-full flex items-center justify-center glass">
+                <button id="theme-toggle" class="w-10 h-10 rounded-full flex items-center justify-center glass hover:bg-gray-800/50 transition-all">
                     <i class="fas fa-moon" id="theme-icon"></i>
                 </button>
-                <a href="QuickCode.apk" class="bg-blue-600 text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform hidden sm:block">Download</a>
+                <a href="QuickCode.apk" class="bg-blue-600 text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-lg shadow-blue-500/30 hidden sm:block">Download</a>
             </div>
         </div>
     </nav>
@@ -142,7 +144,7 @@
             <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tighter">Code Anywhere. <br> <span class="gradient-text code-font">&lt;Build Everywhere./&gt;</span>
             </h1>
             <p class="max-w-2xl mx-auto text-lg md:text-xl font-medium mb-10 leading-relaxed">
-                The ultimate Python IDE designed for mobile developers. Native PIP support, split-screen, and offline power.
+                The ultimate mobile Python IDE. Run complex scripts effortlessly, execute advanced tools flawlessly, and enjoy desktop-grade performance without any lag or crashes.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="QuickCode.apk" class="bg-white text-black px-10 py-4 rounded-2xl font-black text-lg hover:bg-blue-500 hover:text-white transition-all shadow-xl">Get Started Free</a>
@@ -154,36 +156,37 @@
     <!-- Features -->
     <section id="features" class="py-24 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
         <div class="glass p-10 rounded-[2rem] reveal">
-            <i class="fas fa-bolt text-orange-500 text-3xl mb-6"></i>
-            <h3 class="text-2xl font-black mb-3">Instant Run</h3>
-            <p>Fastest Python 3.11 execution engine on Android. No lag, just pure performance.</p>
+            <i class="fas fa-rocket text-orange-500 text-3xl mb-6"></i>
+            <h3 class="text-2xl font-black mb-3">Ultra-Smooth Engine</h3>
+            <p>Optimized for crash-free execution. Runs complex Python scripts and advanced tools instantly without hanging your device.</p>
         </div>
         <div class="glass p-10 rounded-[2rem] reveal delay-100">
             <i class="fas fa-cubes text-blue-500 text-3xl mb-6"></i>
-            <h3 class="text-2xl font-black mb-3">PIP Manager</h3>
-            <p>Install any library like Numpy or Pandas directly. No internet required after setup.</p>
+            <h3 class="text-2xl font-black mb-3">Native PIP Support</h3>
+            <p>Install heavy libraries like Numpy or Pandas directly. Works seamlessly offline once your environment is set up.</p>
         </div>
         <div class="glass p-10 rounded-[2rem] reveal delay-200">
-            <i class="fas fa-code-branch text-green-500 text-3xl mb-6"></i>
-            <h3 class="text-2xl font-black mb-3">Pro Terminal</h3>
-            <p>Full Linux-style terminal for standard inputs and complex script management.</p>
+            <i class="fas fa-terminal text-green-500 text-3xl mb-6"></i>
+            <h3 class="text-2xl font-black mb-3">Pro-Level Terminal</h3>
+            <p>A true desktop-like Linux terminal. Handle standard inputs, complex tasks, and multi-file projects with ease.</p>
         </div>
     </section>
 
     <!-- Pricing -->
-    <section id="pricing" class="py-24 px-6 max-w-7xl mx-auto">
+    <section id="pricing" class="py-24 px-6 max-w-5xl mx-auto">
         <div class="text-center mb-16 reveal">
             <h2 class="text-4xl md:text-6xl font-black tracking-tighter">Choose Your Power</h2>
-            <p class="mt-4 text-lg">Transparent pricing for every stage of your journey.</p>
+            <p class="mt-4 text-lg">Transparent pricing. No hidden fees. Just pure coding.</p>
         </div>
 
-        <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Optimized Grid for 2 Cards -->
+        <div class="grid md:grid-cols-2 gap-8 items-center">
             <!-- Free -->
-            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal">
+            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal h-full">
                 <h3 class="text-xl font-black opacity-50 uppercase mb-4 tracking-widest">Starter</h3>
                 <div class="text-5xl font-black mb-8">₹0 <span class="text-base font-medium opacity-40">/forever</span></div>
                 <ul class="space-y-4 mb-10 flex-grow">
-                    <li><i class="fas fa-check text-green-500 mr-2"></i> Python 3.11 Core</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i> Ultra-Fast Python Engine</li>
                     <li><i class="fas fa-check text-green-500 mr-2"></i> Basic File Manager</li>
                     <li><i class="fas fa-times text-red-500 mr-2"></i> Ad-free Interface</li>
                     <li><i class="fas fa-times text-red-500 mr-2"></i> Split-Screen Mode</li>
@@ -192,50 +195,38 @@
             </div>
 
             <!-- Lifetime (Exclusive) -->
-            <div class="glass p-8 rounded-[2.5rem] flex flex-col lifetime-glow reveal delay-100 scale-105 z-10">
+            <div class="glass p-8 rounded-[2.5rem] flex flex-col lifetime-glow reveal delay-100 scale-105 z-10 h-full">
                 <div class="limited-badge">🔥 EARLY BIRD: FIRST 100 USERS ONLY</div>
                 <h3 class="text-xl font-black text-orange-500 uppercase mb-4 tracking-widest">Lifetime Deal</h3>
                 <div class="text-5xl font-black mb-2">₹99 <span class="text-base font-medium opacity-40">/once</span></div>
                 <p class="text-xs font-bold text-orange-400 mb-8">Grab it before it becomes Monthly!</p>
                 <ul class="space-y-4 mb-10 flex-grow text-important font-bold">
                     <li><i class="fas fa-infinity text-orange-500 mr-2"></i> <strong>Everything Forever</strong></li>
+                    <li><i class="fas fa-bolt text-orange-500 mr-2"></i> Advanced Tools Support</li>
                     <li><i class="fas fa-ban text-orange-500 mr-2"></i> Zero Ads & Popups</li>
                     <li><i class="fas fa-columns text-orange-500 mr-2"></i> Split-Screen Support</li>
-                    <li><i class="fas fa-cloud text-orange-500 mr-2"></i> Early Beta Access</li>
                 </ul>
                 <a href="QuickCode.apk" class="w-full py-4 bg-orange-500 text-white text-center rounded-xl font-black shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform">Get Lifetime Now</a>
-            </div>
-
-            <!-- Monthly -->
-            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal delay-200">
-                <h3 class="text-xl font-black text-blue-500 uppercase mb-4 tracking-widest">Monthly</h3>
-                <div class="text-5xl font-black mb-8">₹99 <span class="text-base font-medium opacity-40">/month</span></div>
-                <ul class="space-y-4 mb-10 flex-grow">
-                    <li><i class="fas fa-check text-blue-500 mr-2"></i> Ad-free Interface</li>
-                    <li><i class="fas fa-check text-blue-500 mr-2"></i> Split-Screen Support</li>
-                    <li><i class="fas fa-check text-blue-500 mr-2"></i> Full PIP Library Access</li>
-                    <li><i class="fas fa-check text-blue-500 mr-2"></i> Cloud Sync Support</li>
-                </ul>
-                <a href="QuickCode.apk" class="w-full py-4 glass text-center rounded-xl font-black hover:bg-blue-600 hover:text-white transition-all">Subscribe</a>
             </div>
         </div>
     </section>
 
     <!-- Developer -->
     <section id="developer" class="py-24 px-6">
-        <div class="max-w-5xl mx-auto glass p-10 md:p-16 rounded-[3rem] flex flex-col md:flex-row items-center gap-12 reveal">
-            <div class="w-48 h-48 md:w-64 md:h-64 rounded-[2rem] overflow-hidden rotate-3 shadow-2xl border-4 border-white/5">
+        <div class="max-w-5xl mx-auto glass p-10 md:p-16 rounded-[3rem] flex flex-col md:flex-row items-center gap-12 reveal border-t border-white/5">
+            <div class="w-48 h-48 md:w-64 md:h-64 rounded-[2rem] overflow-hidden rotate-3 shadow-2xl border-4 border-white/10 shrink-0">
                 <img src="AGTech.jpg" class="w-full h-full object-cover" alt="Akash" onerror="this.src='https://ui-avatars.com/api/?name=Akash+Agrawal&background=3b82f6&color=fff'">
             </div>
             <div class="flex-1">
-                <span class="text-blue-500 font-black uppercase tracking-widest text-sm mb-4 block">The Developer</span>
+                <span class="text-blue-500 font-black uppercase tracking-widest text-sm mb-4 block">Founder & Lead Developer</span>
                 <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter italic">Akash Agrawal</h2>
                 <p class="text-lg leading-relaxed opacity-80 mb-6">
-                    "From a small village with big dreams, I created Quick Code to ensure coding is accessible to everyone. Your phone is more powerful than you think—I'm just helping you unlock it."
+                    "I built Quick Code entirely from scratch with a single-minded vision: to put desktop-grade coding power right in your pocket. As a solo developer, I've engineered this IDE to be lightning-fast, crash-free, and capable of handling complex Python tools effortlessly. Your smartphone is a powerhouse—I'm just giving you the key to unlock it."
                 </p>
-                <div class="flex gap-4">
-                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase">22 Company</span>
-                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase text-orange-500">Proudly Indian</span>
+                <div class="flex flex-wrap gap-4">
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase border border-white/10 hover:border-blue-500 transition-colors">22 Company</span>
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase text-orange-500 border border-orange-500/30 hover:bg-orange-500/10 transition-colors">Proudly Indian</span>
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase text-green-500 border border-green-500/30 hover:bg-green-500/10 transition-colors">Solo Built</span>
                 </div>
             </div>
         </div>
@@ -246,16 +237,16 @@
         <div class="glass p-10 rounded-[3rem] reveal">
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-black">Let's Connect</h2>
-                <p>Have a bug report or a feature request?</p>
+                <p>Have a bug report, a feature request, or just want to say hi?</p>
             </div>
             <form action="https://formsubmit.co/quickcode.by.22@gmail.com" method="POST" class="space-y-4" onsubmit="return handleForm(event)">
                 <div class="grid md:grid-cols-2 gap-4">
-                    <input type="text" name="name" placeholder="Full Name" required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500">
-                    <input type="email" name="email" placeholder="Email Address" required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500">
+                    <input type="text" name="name" placeholder="Full Name" required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500 transition-colors">
+                    <input type="email" name="email" placeholder="Email Address" required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500 transition-colors">
                 </div>
-                <textarea name="message" rows="5" placeholder="Message..." required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500"></textarea>
+                <textarea name="message" rows="5" placeholder="Message..." required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500 transition-colors"></textarea>
                 <input type="hidden" name="_captcha" value="false">
-                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black text-lg hover:scale-[1.02] transition-transform">Send to Developer</button>
+                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black text-lg hover:bg-blue-700 hover:scale-[1.02] transition-all shadow-lg shadow-blue-500/25">Send to Developer</button>
             </form>
         </div>
     </section>
@@ -264,7 +255,8 @@
     <footer class="py-12 border-t border-white/10 text-center">
         <div class="max-w-4xl mx-auto px-6">
             <div class="text-xl font-black tracking-tighter mb-4">Quick<span class="text-blue-500">Code</span></div>
-            <p class="text-xs font-bold opacity-40 uppercase tracking-[0.3em]">&copy; 2024 22 Company | Harvesting Potential Everywhere</p>
+            <p class="text-xs font-bold opacity-40 uppercase tracking-[0.2em]">&copy; 2026 22 Company | All Rights Reserved.</p>
+            <p class="text-xs font-bold opacity-30 mt-2">Harvesting Potential Everywhere</p>
         </div>
     </footer>
 
@@ -310,4 +302,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
