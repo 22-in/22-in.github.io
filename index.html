@@ -8,160 +8,34 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="./assets/icons/sitelogo.png">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
-
-        :root {
-            --bg: #050505;
-            --text: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.7);
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
-            --saffron: #FF9933;
-            --india-green: #138808;
-            --code-blue: #3b82f6;
-        }
-
-        .light-theme {
-            --bg: #f8fafc;
-            --text: #0f172a;
-            --text-dim: #475569;
-            --card-bg: #ffffff;
-            --border: rgba(0, 0, 0, 0.1);
-        }
-
-        body {
-            font-family: 'Bricolage Grotesque', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            transition: all 0.4s ease;
-            background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
-            background-size: 32px 32px;
-        }
-
-        .code-font { font-family: 'JetBrains Mono', monospace; }
-
-        /* Smooth Glass Effect */
-        .glass {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-        .glass:hover { transform: translateY(-5px); border-color: var(--code-blue); }
-
-        /* Typography Optimization */
-        p, span, li { color: var(--text-dim); }
-        h1, h2, h3, strong, .text-important { color: var(--text); }
-
-        /* Special Lifetime Card Glow */
-        .lifetime-glow {
-            position: relative;
-            border: 2px solid var(--saffron) !important;
-            box-shadow: 0 0 20px rgba(255, 153, 51, 0.15);
-        }
-        
-        .gradient-text {
-            background: linear-gradient(to right, var(--saffron), #ffffff, var(--india-green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: gradientAnim 4s linear infinite;
-        }
-        @keyframes gradientAnim {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-
-        .limited-badge {
-            background: linear-gradient(90deg, var(--saffron), var(--india-green));
-            color: white;
-            font-size: 10px;
-            padding: 4px 12px;
-            border-radius: 99px;
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
-            font-weight: 900;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-
-        /* Animations */
-        .reveal { opacity: 0; transform: translateY(30px); transition: 0.6s all ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-
-        #toast {
-            position: fixed;
-            bottom: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--india-green);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            z-index: 1000;
-            transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            font-weight: 700;
-        }
-        #toast.show { bottom: 40px; }
-
-        /* --- NEW: Congratulations Popup --- */
-        #downloadModal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(8px);
-        }
-
-        /* --- NEW: Advanced Screenshots 3D Effect --- */
-        .ss-container { perspective: 1000px; }
-        .ss-mockup {
-            border-radius: 1.5rem;
-            border: 6px solid #111;
-            background: #000;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            transition: all 0.5s ease;
-            transform: rotateY(-10deg) rotateX(5deg);
-        }
-        .ss-mockup:hover {
-            transform: rotateY(0deg) rotateX(0deg) scale(1.05);
-            border-color: var(--code-blue);
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
-        }
-        .light-theme .ss-mockup { border-color: #cbd5e1; }
-    </style>
+    
+    <!-- Link External CSS -->
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body class="dark-theme">
 
     <!-- Toast for Feedback Form -->
     <div id="toast">Message Sent Successfully!</div>
 
-    <!-- NEW: Download Congratulations Popup -->
+    <!-- Download Congratulations Popup -->
     <div id="downloadModal" class="p-4">
         <div class="glass max-w-md w-full p-8 rounded-[2rem] text-center relative border-blue-500/50">
             <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-500/30">
                 <i class="fas fa-check text-white text-2xl"></i>
             </div>
             <h2 class="text-3xl font-black mb-2 text-white">Congratulations!</h2>
-            <p class="mb-6 opacity-80 text-white">Your download has started. Get ready to code anywhere with Quick Code.</p>
-            <button onclick="closeModal()" class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all">Okay, Awesome!</button>
+            <p class="mb-6 opacity-80 text-white">Your download has started. Get ready to code anywhere with desktop-grade power.</p>
+            <button onclick="closeModal()" class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all hover:scale-[1.02]">Okay, Awesome!</button>
         </div>
     </div>
 
     <!-- Nav -->
     <nav class="fixed w-full z-50 px-4 py-4" id="navbar">
-        <div class="max-w-6xl mx-auto glass rounded-full px-6 py-3 flex justify-between items-center shadow-2xl">
+        <div class="max-w-6xl mx-auto glass rounded-full px-6 py-3 flex justify-between items-center shadow-2xl transition-all duration-300">
             <!-- Dynamic Logo -->
-            <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
-                <img id="nav-logo" src="./assets/icons/wQC.png" alt="QuickCode Logo" class="w-8 h-8 rounded-lg object-cover shadow-sm">
-                <span class="text-xl font-extrabold tracking-tighter">Quick<span class="text-blue-500">Code</span></span>
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
+                <img id="nav-logo" src="./assets/icons/wQC.png" alt="QuickCode Logo" class="w-8 h-8 rounded-lg object-cover shadow-sm group-hover:scale-105 transition-transform">
+                <span class="text-xl font-extrabold tracking-tighter logo-text">Quick<span class="text-blue-500">Code</span></span>
             </div>
             
             <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest">
@@ -190,13 +64,13 @@
                 The ultimate mobile Python IDE. Run complex scripts effortlessly, execute advanced tools flawlessly, and enjoy desktop-grade performance without any lag or crashes.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="QuickCode.apk" onclick="showDownloadMsg(event)" class="bg-white text-black px-10 py-4 rounded-2xl font-black text-lg hover:bg-blue-500 hover:text-white transition-all shadow-xl">Get Started Free</a>
+                <a href="QuickCode.apk" onclick="showDownloadMsg(event)" class="bg-white text-black px-10 py-4 rounded-2xl font-black text-lg hover:bg-blue-500 hover:text-white transition-all shadow-xl hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]">Get Started Free</a>
                 <a href="#pricing" class="glass px-10 py-4 rounded-2xl font-black text-lg">View Lifetime Offer</a>
             </div>
         </div>
     </section>
 
-    <!-- NEW: Advanced Screenshots Interface -->
+    <!-- Advanced Screenshots Interface -->
     <section class="py-16 px-6 max-w-6xl mx-auto ss-container overflow-hidden">
         <div class="text-center mb-12 reveal">
             <h2 class="text-4xl font-black tracking-tighter">App Interface</h2>
@@ -208,7 +82,7 @@
                 <img src="./assets/screenshots/screen1.png" alt="Editor" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/400x800/111/fff?text=Smart+Editor'">
             </div>
             <!-- Screen 2 (Center Pop) -->
-            <div class="ss-mockup group md:-translate-y-8 z-10">
+            <div class="ss-mockup group md:-translate-y-8 z-10 shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
                 <img src="./assets/screenshots/screen2.png" alt="Terminal" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/400x800/111/fff?text=Pro+Terminal'">
             </div>
             <!-- Screen 3 -->
@@ -220,20 +94,46 @@
 
     <!-- Features -->
     <section id="features" class="py-16 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
+        <!-- Feature 1 -->
         <div class="glass p-10 rounded-[2rem] reveal">
-            <i class="fas fa-rocket text-orange-500 text-3xl mb-6"></i>
+            <i class="fas fa-rocket text-orange-500 text-3xl mb-6 drop-shadow-[0_0_10px_rgba(255,153,51,0.5)]"></i>
             <h3 class="text-2xl font-black mb-3">Ultra-Smooth Engine</h3>
-            <p>Optimized for crash-free execution. Runs complex Python scripts and advanced tools instantly without hanging your device.</p>
+            <p>Optimized specifically for crash-free execution. Runs complex Python scripts instantly without hanging your device, ensuring maximum productivity.</p>
         </div>
+        
+        <!-- Feature 2 -->
         <div class="glass p-10 rounded-[2rem] reveal delay-100">
-            <i class="fas fa-cubes text-blue-500 text-3xl mb-6"></i>
+            <i class="fas fa-box-open text-blue-500 text-3xl mb-6 drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]"></i>
             <h3 class="text-2xl font-black mb-3">Native PIP Support</h3>
-            <p>Install heavy libraries like Numpy or Pandas directly. Works seamlessly offline once your environment is set up.</p>
+            <p>Experience PC-like package management. Run <code class="premium-badge">pip install &lt;pkg&gt;</code> to seamlessly fetch and integrate pure Python libraries. Designed perfectly for light mobile execution.</p>
         </div>
+        
+        <!-- Feature 3 -->
         <div class="glass p-10 rounded-[2rem] reveal delay-200">
-            <i class="fas fa-terminal text-green-500 text-3xl mb-6"></i>
+            <i class="fas fa-terminal text-green-500 text-3xl mb-6 drop-shadow-[0_0_10px_rgba(19,136,8,0.5)]"></i>
             <h3 class="text-2xl font-black mb-3">Pro-Level Terminal</h3>
-            <p>A true desktop-like Linux terminal. Handle standard inputs, complex tasks, and multi-file projects with ease.</p>
+            <p>A true desktop-grade Linux terminal environment. Handle standard inputs, complex automated tasks, and multi-file projects with absolute ease.</p>
+        </div>
+        
+        <!-- Feature 4 -->
+        <div class="glass p-10 rounded-[2rem] reveal">
+            <i class="fas fa-store text-orange-500 text-3xl mb-6 drop-shadow-[0_0_10px_rgba(255,153,51,0.5)]"></i>
+            <h3 class="text-2xl font-black mb-3">Exclusive '22 Store'</h3>
+            <p>Access our optimized repository for custom packages. Skip the setup—just type <code class="premium-badge">22 install &lt;pkg&gt;</code> for instant, error-free integration.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="glass p-10 rounded-[2rem] reveal delay-100">
+            <i class="fas fa-desktop text-blue-500 text-3xl mb-6 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]"></i>
+            <h3 class="text-2xl font-black mb-3">Desktop-Grade UI</h3>
+            <p>Bridging the gap between PC and mobile. Desktop users will feel at home, while mobile coders will effortlessly master professional workflows.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="glass p-10 rounded-[2rem] reveal delay-200">
+            <i class="fas fa-shield-alt text-green-400 text-3xl mb-6 drop-shadow-[0_0_10px_rgba(96,165,250,0.5)]"></i>
+            <h3 class="text-2xl font-black mb-3">100% Offline Power</h3>
+            <p>Write, test, and execute your code completely offline in a secure local environment once your packages are set up.</p>
         </div>
     </section>
 
@@ -245,30 +145,37 @@
         </div>
 
         <div class="grid md:grid-cols-2 gap-8 items-center">
-            <!-- Free -->
-            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal h-full">
+            <!-- Free Plan -->
+            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal h-full border-t border-white/10">
                 <h3 class="text-xl font-black opacity-50 uppercase mb-4 tracking-widest">Starter</h3>
                 <div class="text-5xl font-black mb-8">₹0 <span class="text-base font-medium opacity-40">/forever</span></div>
-                <ul class="space-y-4 mb-10 flex-grow">
+                <ul class="space-y-4 mb-10 flex-grow font-medium">
                     <li><i class="fas fa-check text-green-500 mr-2"></i> Ultra-Fast Python Engine</li>
-                    <li><i class="fas fa-check text-green-500 mr-2"></i> Basic File Manager</li>
-                    <li><i class="fas fa-times text-red-500 mr-2"></i> Ad-free Interface</li>
-                    <li><i class="fas fa-times text-red-500 mr-2"></i> Split-Screen Mode</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i> Few Python Libraries</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i> Pro Terminal Access</li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i> Standard File Manager</li>
+                    <li class="opacity-50"><i class="fas fa-times text-red-500 mr-2"></i> Ad-free Interface</li>
+                    <li class="opacity-50"><i class="fas fa-times text-red-500 mr-2"></i> Split-Screen Mode</li>
+                    <li class="opacity-50"><i class="fas fa-times text-red-500 mr-2"></i> Premium '22 Store' Access</li>
+                    <li class="opacity-50"><i class="fas fa-times text-red-500 mr-2"></i> Full PIP Access</li>
                 </ul>
                 <button class="w-full py-4 glass rounded-xl font-black opacity-50 cursor-not-allowed">Active Plan</button>
             </div>
 
-            <!-- Lifetime (Exclusive) -->
+            <!-- Lifetime Plan (Exclusive) -->
             <div class="glass p-8 rounded-[2.5rem] flex flex-col lifetime-glow reveal delay-100 scale-105 z-10 h-full">
                 <div class="limited-badge">🔥 EARLY BIRD: FIRST 100 USERS ONLY</div>
-                <h3 class="text-xl font-black text-orange-500 uppercase mb-4 tracking-widest">Lifetime Deal</h3>
+                <h3 class="text-xl font-black text-orange-500 uppercase mb-4 tracking-widest drop-shadow-[0_0_8px_rgba(255,153,51,0.5)]">Lifetime Deal</h3>
                 <div class="text-5xl font-black mb-2">₹99 <span class="text-base font-medium opacity-40">/once</span></div>
-                <p class="text-xs font-bold text-orange-400 mb-8">Grab it before it becomes Monthly!</p>
+                <p class="text-xs font-bold text-orange-400 mb-8 bg-orange-500/10 inline-block px-2 py-1 rounded-md w-fit">Grab it before it becomes Monthly!</p>
                 <ul class="space-y-4 mb-10 flex-grow text-important font-bold">
-                    <li><i class="fas fa-infinity text-orange-500 mr-2"></i> <strong>Everything Forever</strong></li>
+                    <li><i class="fas fa-infinity text-orange-500 mr-2 drop-shadow-[0_0_5px_rgba(255,153,51,0.8)]"></i> <strong>Everything Forever</strong></li>
                     <li><i class="fas fa-bolt text-orange-500 mr-2"></i> Advanced Tools Support</li>
+                    <li><i class="fas fa-store text-orange-500 mr-2"></i> Exclusive '22 Store' Access</li>
                     <li><i class="fas fa-ban text-orange-500 mr-2"></i> Zero Ads & Popups</li>
                     <li><i class="fas fa-columns text-orange-500 mr-2"></i> Split-Screen Support</li>
+                    <li><i class="fas fa-cloud text-orange-500 mr-2"></i> Cloud Sync Backup</li>
+                    <li><i class="fas fa-cubes text-orange-500 mr-2"></i> Future Features</li>
                 </ul>
                 <a href="QuickCode.apk" onclick="showDownloadMsg(event)" class="w-full py-4 bg-orange-500 text-white text-center rounded-xl font-black shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform">Get Lifetime Now</a>
             </div>
@@ -277,20 +184,22 @@
 
     <!-- Developer -->
     <section id="developer" class="py-16 px-6">
-        <div class="max-w-5xl mx-auto glass p-10 md:p-16 rounded-[3rem] flex flex-col md:flex-row items-center gap-12 reveal border-t border-white/5">
-            <div class="w-48 h-48 md:w-64 md:h-64 rounded-[2rem] overflow-hidden rotate-3 shadow-2xl border-4 border-white/10 shrink-0">
-                <img src="AGTech.jpg" class="w-full h-full object-cover" alt="Akash" onerror="this.src='https://ui-avatars.com/api/?name=Akash+Agrawal&background=3b82f6&color=fff'">
+        <div class="max-w-5xl mx-auto glass p-10 md:p-16 rounded-[3rem] flex flex-col md:flex-row items-center gap-12 reveal border-t border-white/5 relative overflow-hidden">
+            <div class="absolute -top-20 -right-20 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+            
+            <div class="w-48 h-48 md:w-64 md:h-64 rounded-[2rem] overflow-hidden rotate-3 shadow-2xl border-4 border-white/10 shrink-0 group hover:rotate-0 transition-transform duration-500">
+                <img src="AGTech.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Akash" onerror="this.src='https://ui-avatars.com/api/?name=Akash+Agrawal&background=3b82f6&color=fff'">
             </div>
-            <div class="flex-1">
+            <div class="flex-1 relative z-10">
                 <span class="text-blue-500 font-black uppercase tracking-widest text-sm mb-4 block">Founder & Lead Developer</span>
                 <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter italic">Akash Agrawal</h2>
                 <p class="text-lg leading-relaxed opacity-80 mb-6">
                     "I built Quick Code entirely from scratch with a single-minded vision: to put desktop-grade coding power right in your pocket. As a solo developer, I've engineered this IDE to be lightning-fast, crash-free, and capable of handling complex Python tools effortlessly. Your smartphone is a powerhouse—I'm just giving you the key to unlock it."
                 </p>
                 <div class="flex flex-wrap gap-4">
-                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase border border-white/10 hover:border-blue-500 transition-colors">22 Company</span>
-                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase text-orange-500 border border-orange-500/30 hover:bg-orange-500/10 transition-colors">Proudly Indian</span>
-                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase text-green-500 border border-green-500/30 hover:bg-green-500/10 transition-colors">Solo Built</span>
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase text-orange-500 border border-orange-500/30 hover:bg-orange-500/10 transition-colors cursor-default">Proudly Indian</span>
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase border border-white/10 hover:border-blue-500 transition-colors cursor-default">22 Company</span>
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase text-green-500 border border-green-500/30 hover:bg-green-500/10 transition-colors cursor-default">Solo Built</span>
                 </div>
             </div>
         </div>
@@ -298,17 +207,17 @@
 
     <!-- Feedback -->
     <section id="feedback" class="py-16 px-6 max-w-3xl mx-auto">
-        <div class="glass p-10 rounded-[3rem] reveal">
-            <div class="text-center mb-10">
+        <div class="glass p-10 rounded-[3rem] reveal border-t border-white/5 relative overflow-hidden">
+            <div class="text-center mb-10 relative z-10">
                 <h2 class="text-3xl font-black">Let's Connect</h2>
                 <p>Have a bug report, a feature request, or just want to say hi?</p>
             </div>
-            <form action="https://formsubmit.co/quickcode.by.22@gmail.com" method="POST" class="space-y-4" onsubmit="return handleForm(event)">
+            <form action="https://formsubmit.co/quickcode.by.22@gmail.com" method="POST" class="space-y-4 relative z-10" onsubmit="return handleForm(event)">
                 <div class="grid md:grid-cols-2 gap-4">
                     <input type="text" name="name" placeholder="Full Name" required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500 transition-colors">
                     <input type="email" name="email" placeholder="Email Address" required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500 transition-colors">
                 </div>
-                <textarea name="message" rows="5" placeholder="Message..." required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500 transition-colors"></textarea>
+                <textarea name="message" rows="5" placeholder="Message..." required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500 transition-colors resize-none"></textarea>
                 <input type="hidden" name="_captcha" value="false">
                 <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black text-lg hover:bg-blue-700 hover:scale-[1.02] transition-all shadow-lg shadow-blue-500/25">Send to Developer</button>
             </form>
@@ -318,7 +227,7 @@
     <!-- Footer -->
     <footer class="py-12 border-t border-white/10">
         <div class="max-w-5xl mx-auto px-6 text-center">
-            <div class="text-2xl font-black tracking-tight mb-3">
+            <div class="text-2xl font-black tracking-tight mb-3 logo-text">
                 Quick<span class="text-blue-500">Code</span>
             </div>
             <p class="text-sm opacity-60 mb-6">
@@ -334,67 +243,13 @@
                    Terms of Service
                 </a>
             </div>
-            <p class="text-xs opacity-50">
+            <p class="text-xs opacity-60">
                 © 2026 22 Company. All rights reserved.
             </p>
         </div>
     </footer>
 
-    <script>
-        // Reveal logic
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('active');
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // Theme Toggle & Dynamic Logo
-        const themeBtn = document.getElementById('theme-toggle');
-        const themeIcon = document.getElementById('theme-icon');
-        const navLogo = document.getElementById('nav-logo');
-
-        themeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('light-theme');
-            
-            if (document.body.classList.contains('light-theme')) {
-                themeIcon.className = 'fas fa-sun text-orange-500';
-                navLogo.src = './assets/icons/QC.png'; // Light theme pe logo
-            } else {
-                themeIcon.className = 'fas fa-moon';
-                navLogo.src = './assets/icons/wQC.png'; // Dark theme pe wlogo
-            }
-        });
-
-        // Navbar scroll effect
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('#navbar > div');
-            if (window.scrollY > 50) {
-                nav.style.backgroundColor = document.body.classList.contains('light-theme') ? "rgba(255,255,255,0.9)" : "rgba(10,10,10,0.9)";
-                nav.classList.add('py-2');
-            } else {
-                nav.style.backgroundColor = "";
-                nav.classList.remove('py-2');
-            }
-        });
-
-        // Form Submission Toast
-        function handleForm(e) {
-            const toast = document.getElementById('toast');
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 4000);
-            return true;
-        }
-
-        // Popup Logic
-        function showDownloadMsg(e) {
-            // Link naturally run hoga (.apk download start hogi), uske sath popup dikhega
-            document.getElementById('downloadModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('downloadModal').style.display = 'none';
-        }
-    </script>
+    <!-- Link External Javascript -->
+    <script src="./assets/js/script.js"></script>
 </body>
 </html>
