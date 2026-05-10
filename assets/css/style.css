@@ -130,7 +130,7 @@ code.premium-badge {
 .ss-container { perspective: 1000px; }
 .ss-mockup {
     width: 250px;
-    
+    margin: 0 auto;
     border-radius: 1.5rem;
     border: 6px solid #111;
     background: #000;
