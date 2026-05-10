@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+    --bg: #050505;
+    --text: #ffffff;
+    --text-dim: rgba(255, 255, 255, 0.7);
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.08);
+    --saffron: #FF9933;
+    --india-green: #138808;
+    --code-blue: #3b82f6;
+}
+
+.light-theme {
+    --bg: #f8fafc;
+    --text: #0f172a;
+    --text-dim: #475569;
+    --card-bg: #ffffff;
+    --border: rgba(0, 0, 0, 0.08);
+}
+
+body {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 0.4s ease, color 0.4s ease;
+    background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
+    background-size: 32px 32px;
+}
+
+.code-font { font-family: 'JetBrains Mono', monospace; }
+
+/* Dynamic Logo Color Magic */
+.logo-text { color: #ffffff !important; transition: color 0.4s ease; }
+.light-theme .logo-text { color: #000000 !important; }
+
+/* Smooth Glass Effect */
+.glass {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass:hover { 
+    transform: translateY(-5px); 
+    border-color: var(--code-blue); 
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+}
+
+/* Typography Optimization */
+p, span, li { color: var(--text-dim); }
+h1, h2, h3, strong, .text-important { color: var(--text); }
+
+/* Premium Code Badge */
+code.premium-badge {
+    background: rgba(128, 128, 128, 0.15);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9em;
+    color: var(--code-blue);
+}
+
+/* Special Lifetime Card Glow */
+.lifetime-glow {
+    position: relative;
+    border: 2px solid var(--saffron) !important;
+    box-shadow: 0 0 20px rgba(255, 153, 51, 0.15);
+}
+
+.gradient-text {
+    background: linear-gradient(to right, var(--saffron), #ffffff, var(--india-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: gradientAnim 4s linear infinite;
+}
+@keyframes gradientAnim {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+.limited-badge {
+    background: linear-gradient(90deg, var(--saffron), var(--india-green));
+    color: white;
+    font-size: 10px;
+    padding: 4px 12px;
+    border-radius: 99px;
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-weight: 900;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Animations */
+.reveal { opacity: 0; transform: translateY(30px); transition: 0.6s all ease-out; }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+#toast {
+    position: fixed;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--india-green);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 50px;
+    z-index: 1000;
+    transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    font-weight: 700;
+}
+#toast.show { bottom: 40px; }
+
+/* Congratulations Popup */
+#downloadModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+}
+
+/* Advanced Screenshots 3D Effect */
+.ss-container { perspective: 1000px; }
+.ss-mockup {
+    border-radius: 1.5rem;
+    border: 6px solid #111;
+    background: #000;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    transition: all 0.5s ease;
+    transform: rotateY(-10deg) rotateX(5deg);
+}
+.ss-mockup:hover {
+    transform: rotateY(0deg) rotateX(0deg) scale(1.05);
+    border-color: var(--code-blue);
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+    z-index: 20;
+}
+.light-theme .ss-mockup { border-color: #cbd5e1; }
