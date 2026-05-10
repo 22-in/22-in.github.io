@@ -129,6 +129,8 @@ code.premium-badge {
 /* Advanced Screenshots 3D Effect */
 .ss-container { perspective: 1000px; }
 .ss-mockup {
+    width: 250px;
+    
     border-radius: 1.5rem;
     border: 6px solid #111;
     background: #000;
