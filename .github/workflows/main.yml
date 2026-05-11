@@ -4,6 +4,11 @@ on:
   # Isse automatic build band ho jayega aur Manual button enable ho jayega
   workflow_dispatch: 
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
