@@ -1,0 +1,15 @@
+name: 22-in
+
+on:
+  push:
+    branches:
+      - main  # Sirf main branch par push hone par chalega
+  workflow_dispatch: # Isse aap manually 'Run' button daba kar build kar payenge
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      # Baaki ke steps jo aapke build ke liye zaroori hain
