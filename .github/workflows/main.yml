@@ -1,15 +1,26 @@
 name: 22-in
 
 on:
-  push:
-    branches:
-      - main  # Sirf main branch par push hone par chalega
-  workflow_dispatch: # Isse aap manually 'Run' button daba kar build kar payenge
+  # Isse automatic build band ho jayega aur Manual button enable ho jayega
+  workflow_dispatch: 
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
-      # Baaki ke steps jo aapke build ke liye zaroori hain
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Agar aapki files root mein hain to '.' rehne dein
+          # Agar kisi folder (e.g. docs) mein hain to folder name likhein
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
