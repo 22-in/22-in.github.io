@@ -212,14 +212,23 @@
                 <h2 class="text-3xl font-black">Let's Connect</h2>
                 <p>Have a bug report, a feature request, or just want to say hi?</p>
             </div>
-            <form action="https://formsubmit.co/quickcode.by.22@gmail.com" method="POST" class="space-y-4 relative z-10" onsubmit="return handleForm(event)">
+            <!-- Form Tag -->
+            <form action="https://formsubmit.co/quickcode.by.22@gmail.com" method="POST" class="space-y-4 relative z-10">
+                    <input type="hidden" name="_next" value="https://22-in.github.io/#feedback">
+
                 <div class="grid md:grid-cols-2 gap-4">
                     <input type="text" name="name" placeholder="Full Name" required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500 transition-colors">
                     <input type="email" name="email" placeholder="Email Address" required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500 transition-colors">
                 </div>
+
                 <textarea name="message" rows="5" placeholder="Message..." required class="w-full glass p-4 rounded-xl focus:outline-none focus:border-blue-500 transition-colors resize-none"></textarea>
+    
                 <input type="hidden" name="_captcha" value="false">
-                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black text-lg hover:bg-blue-700 hover:scale-[1.02] transition-all shadow-lg shadow-blue-500/25">Send to Developer</button>
+
+                <!-- Submit Button -->
+                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black text-lg hover:bg-blue-700 hover:scale-[1.02] transition-all shadow-lg shadow-blue-500/25">
+                    Send to Developer
+                </button>
             </form>
         </div>
     </section>
