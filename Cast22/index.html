@@ -1,1 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cast22 | Seamless Browser Screen Casting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
 
+        :root {
+            --bg: #050505;
+            --text: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --saffron: #FF9933;
+            --india-green: #138808;
+            --code-blue: #3b82f6;
+            --input-bg: rgba(255, 255, 255, 0.03);
+        }
+
+        .light-theme {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --text-dim: #475569;
+            --card-bg: #ffffff;
+            --border: rgba(0, 0, 0, 0.08);
+            --input-bg: transparent;
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
+            background-size: 32px 32px;
+            overflow-x: hidden;
+        }
+
+        .code-font { font-family: 'JetBrains Mono', monospace; }
+        .logo-text { color: #ffffff !important; transition: color 0.3s ease; }
+        .light-theme .logo-text { color: #000000 !important; }
+
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .glass:hover { 
+            transform: translateY(-5px); 
+            border-color: var(--code-blue); 
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.1);
+        }
+
+        .no-hover-transform:hover { transform: none; }
+
+        p, span, li, td { color: var(--text-dim); }
+        h1, h2, h3, h4, h5, strong, .text-important { color: var(--text); }
+        .light-theme .text-white { color: #0f172a !important; }
+
+        /* Indian Flag Gradient matching Quick Code */
+        .gradient-text {
+            background: linear-gradient(to right, var(--saffron), var(--text), var(--india-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradientAnim 4s linear infinite;
+        }
+        @keyframes gradientAnim {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: 0.5s all cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        #toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--code-blue);
+            color: white !important;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 1000;
+            transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+        }
+        #toast.show { bottom: 40px; }
+
+        input, textarea { color: var(--text); background: var(--input-bg); }
+        .light-theme input, .light-theme textarea { background: #f1f5f9; border: 1px solid var(--border); }
+    </style>
+</head>
+<body class="dark-theme">
+
+    <div id="toast">Connecting device...</div>
+
+    <!-- Nav -->
+    <nav class="fixed w-full z-50 px-4 py-4" id="navbar">
+        <div class="max-w-6xl mx-auto glass rounded-full px-6 py-3 flex justify-between items-center shadow-2xl transition-all duration-300">
+            <div class="flex items-center gap-2 cursor-pointer group" onclick="window.scrollTo(0,0)">
+                <i class="fas fa-broadcast-tower text-blue-500 text-2xl group-hover:scale-110 transition-transform"></i>
+                <span class="text-2xl font-extrabold tracking-tighter logo-text">Cast<span class="text-blue-500">22</span></span>
+            </div>
+            
+            <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest">
+                <a href="#how-it-works" class="hover:text-blue-500 transition-colors">How it works</a>
+                <a href="#features" class="hover:text-blue-500 transition-colors">Features</a>
+                <a href="#team" class="hover:text-blue-500 transition-colors">Developer</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" class="w-10 h-10 rounded-full flex items-center justify-center glass hover:bg-gray-800/50 transition-all">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-40 pb-20 px-6 text-center min-h-[90vh] flex flex-col justify-center relative">
+        <!-- Background Glow -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[600px] max-h-[600px] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none z-0"></div>
+
+        <div class="reveal relative z-10">
+            <!-- Made in India Tag -->
+            <span class="text-xs font-black tracking-widest uppercase border border-orange-500/30 px-4 py-2 rounded-full text-orange-500 mb-6 inline-block">Made in India with Love</span>
+            
+            <!-- Headline with Indian Flag Animation -->
+            <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tighter">
+                No cables. No apps. <br> 
+                <span class="gradient-text code-font">&lt;Just Your Browser./&gt;</span>
+            </h1>
+            
+            <p class="max-w-2xl mx-auto text-lg md:text-xl font-medium mb-12 opacity-80 leading-relaxed">
+                Seamlessly mirror your desktop to any smart TV or secondary display globally using secure peer-to-peer WebRTC technology. 100% Free, 100% Secure.
+            </p>
+            
+            <!-- Cards (PC / TV Links) -->
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <!-- TV Link -->
+                <a href="https://cast22.vercel.app/tv" class="glass px-8 py-8 rounded-[2rem] w-full sm:w-64 flex flex-col items-center group relative overflow-hidden transition-all hover:bg-gray-800/50">
+                    <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <span class="text-6xl mb-4 group-hover:scale-110 group-hover:-translate-y-2 transition-transform duration-300 drop-shadow-2xl">📺</span>
+                    <span class="text-2xl font-black mb-1 text-white">I am a TV</span>
+                    <span class="text-sm font-medium">Receive screen</span>
+                </a>
+                
+                <!-- PC Link -->
+                <a href="https://cast22.vercel.app/cast" class="bg-blue-600 px-8 py-8 rounded-[2rem] w-full sm:w-64 flex flex-col items-center group relative overflow-hidden transition-all hover:bg-blue-500 shadow-[0_0_40px_rgba(59,130,246,0.3)] hover:shadow-[0_0_60px_rgba(59,130,246,0.5)] hover:-translate-y-2">
+                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <span class="text-6xl mb-4 group-hover:scale-110 group-hover:-translate-y-2 transition-transform duration-300 drop-shadow-2xl">💻</span>
+                    <span class="text-2xl font-black mb-1 text-white">I am a PC</span>
+                    <span class="text-sm font-medium text-blue-100">Cast your screen</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works -->
+    <section id="how-it-works" class="py-16 px-6 max-w-5xl mx-auto">
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">Magic in 3 Steps</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6 relative">
+            <div class="hidden md:block absolute top-1/2 left-10 right-10 h-1 bg-gradient-to-r from-[var(--border)] via-blue-500/50 to-[var(--border)] -translate-y-1/2 z-0"></div>
+
+            <div class="glass p-8 rounded-[2rem] text-center reveal z-10 relative bg-[var(--bg)]">
+                <div class="w-16 h-16 bg-gray-800 border-2 border-[var(--border)] rounded-full flex items-center justify-center text-2xl font-black mx-auto mb-6">1</div>
+                <h3 class="text-xl font-bold mb-2">Open Cast22</h3>
+                <p class="text-sm">Visit this site on your Smart TV browser and click "I am a TV".</p>
+            </div>
+            
+            <div class="glass p-8 rounded-[2rem] text-center reveal delay-100 z-10 relative bg-[var(--bg)] border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.15)]">
+                <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-black mx-auto mb-6 shadow-lg shadow-blue-500/30">2</div>
+                <h3 class="text-xl font-bold mb-2">Cast from PC</h3>
+                <p class="text-sm">Click "I am a PC", select the screen or tab you want to share.</p>
+            </div>
+            
+            <div class="glass p-8 rounded-[2rem] text-center reveal delay-200 z-10 relative bg-[var(--bg)]">
+                <div class="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center text-2xl font-black mx-auto mb-6 shadow-lg shadow-green-500/30"><i class="fas fa-check"></i></div>
+                <h3 class="text-xl font-bold mb-2">Paired Instantly</h3>
+                <p class="text-sm">Enter the pairing code and your screen appears on the TV instantly.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="py-20 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
+        <div class="text-center md:col-span-3 mb-10 reveal">
+            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">Why use Cast22?</h2>
+        </div>
+
+        <div class="glass p-10 rounded-[2rem] reveal hover:border-orange-500/50 group">
+            <i class="fas fa-bolt text-orange-500 text-4xl mb-6 group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_rgba(255,153,51,0.5)]"></i>
+            <h3 class="text-2xl font-black mb-3 text-white">Ultra-Low Latency</h3>
+            <p>Built on WebRTC. Experience near real-time screen sharing, perfect for presentations and casual streaming.</p>
+        </div>
+        <div class="glass p-10 rounded-[2rem] reveal hover:border-blue-500/50 group">
+            <i class="fas fa-earth text-blue-500 text-4xl mb-6 group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]"></i>
+            <h3 class="text-2xl font-black mb-3 text-white">Global Access</h3>
+            <p>No local Wi-Fi needed. As long as both devices have internet, you can cast from anywhere in the world.</p>
+        </div>
+        <div class="glass p-10 rounded-[2rem] reveal hover:border-green-500/50 group">
+            <i class="fas fa-shield-alt text-green-500 text-4xl mb-6 group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]"></i>
+            <h3 class="text-2xl font-black mb-3 text-white">100% Secure P2P</h3>
+            <p>Your screen data is encrypted and transferred directly between devices. Your privacy is our priority.</p>
+        </div>
+    </section>
+
+    <!-- TEAM / DEVELOPER SECTION -->
+    <section id="team" class="py-16 px-6">
+        <div class="text-center mb-12 reveal">
+            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">Behind Cast22</h2>
+        </div>
+        
+        <!-- Akash Agrawal Box -->
+        <div class="max-w-5xl mx-auto glass p-10 md:p-16 rounded-[3rem] flex flex-col md:flex-row items-center gap-12 reveal border-t border-[var(--border)] relative overflow-hidden mb-6">
+            <div class="absolute -top-20 -right-20 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+            
+            <div class="w-48 h-48 md:w-64 md:h-64 rounded-[2rem] overflow-hidden rotate-3 shadow-2xl border-4 border-white/10 shrink-0 group hover:rotate-0 transition-transform duration-500">
+                <img src="AGTech.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Akash Agrawal" onerror="this.src='https://ui-avatars.com/api/?name=Akash+Agrawal&background=3b82f6&color=fff'">
+            </div>
+            
+            <div class="flex-1 relative z-10 text-center md:text-left">
+                <span class="text-blue-500 font-black uppercase tracking-widest text-sm mb-4 block">Founder & Lead Developer</span>
+                <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter italic text-white">Akash Agrawal</h2>
+                <p class="text-lg leading-relaxed opacity-80 mb-6">
+                    "I built Cast22 to bridge the gap between devices without the clutter of cables, dongles, or sketchy third-party apps. As a solo developer, I've engineered this platform using modern WebRTC technology to ensure your screen sharing is lightning-fast, highly secure, and works seamlessly directly from your browser."
+                </p>
+                <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase text-orange-500 border border-orange-500/30 hover:bg-orange-500/10 transition-colors cursor-default">Proudly Indian</span>
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase border border-[var(--border)] hover:border-blue-500 transition-colors cursor-default">Solo Built</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 22 Company Box -->
+        <div class="max-w-2xl mx-auto glass p-6 md:p-8 rounded-[2rem] flex flex-col sm:flex-row items-center justify-center gap-6 relative overflow-hidden group border-t border-[var(--border)] hover:border-green-500/50 reveal delay-100">
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-green-500/10 rounded-full blur-[40px] pointer-events-none"></div>
+            
+            <div class="w-20 h-20 md:w-24 md:h-24 rounded-[1.2rem] overflow-hidden rotate-3 shadow-xl border-2 border-white/10 shrink-0 group-hover:rotate-0 transition-transform duration-500 flex items-center justify-center">
+                <img src="./assets/icons/22logo.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="22 Company" onerror="this.src='https://ui-avatars.com/api/?name=22&background=138808&color=fff'">
+            </div>
+            
+            <div class="text-center sm:text-left relative z-10">
+                <span class="text-green-500 font-black uppercase tracking-widest text-[10px] md:text-xs mb-1 block">Parent Entity</span>
+                <h2 class="text-2xl md:text-3xl font-black mb-3 tracking-tighter italic text-white">22 Company</h2>
+                <div class="flex flex-wrap justify-center sm:justify-start gap-2">
+                    <span class="px-2 py-1 glass rounded-md text-[10px] font-bold uppercase text-green-500 border border-green-500/30 cursor-default">Web App</span>
+                    <span class="px-2 py-1 glass rounded-md text-[10px] font-bold uppercase border border-[var(--border)] cursor-default">Vision 2026</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-[var(--border)] mt-10 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-center gap-8 mb-10">
+                
+                <div class="text-center md:text-left">
+                    <div class="text-3xl font-black tracking-tight mb-2 logo-text">
+                        Cast<span class="text-blue-500">22</span>
+                    </div>
+                    <p class="text-sm opacity-60 mb-5">Harvesting Potential Everywhere</p>
+                    <div class="flex flex-wrap justify-center md:justify-start gap-4 md:gap-6 text-sm font-semibold">
+                        <a href="#" class="opacity-70 hover:opacity-100 hover:text-blue-500 transition duration-300">Privacy Policy</a>
+                        <a href="#" class="opacity-70 hover:opacity-100 hover:text-blue-500 transition duration-300">Terms of Service</a>
+                    </div>
+                </div>
+
+                <!-- Updated Social Links -->
+                <div class="flex justify-center gap-4">
+                    <a href="https://www.instagram.com/22in_official" target="_blank" class="w-12 h-12 glass rounded-full flex items-center justify-center text-xl hover:-translate-y-2 transition-all hover:text-[#E4405F] hover:border-[#E4405F]/50 shadow-lg">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.youtube.com/@22-in" target="_blank" class="w-12 h-12 glass rounded-full flex items-center justify-center text-xl hover:-translate-y-2 transition-all hover:text-[#FF0000] hover:border-[#FF0000]/50 shadow-lg">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://www.github.com/22-in" target="_blank" class="w-12 h-12 glass rounded-full flex items-center justify-center text-xl hover:-translate-y-2 transition-all hover:text-gray-400 hover:border-gray-400/50 shadow-lg">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="text-center border-t border-[var(--border)] pt-8">
+                <p class="text-xs opacity-40">© 2026 22 Company. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        const themeBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            if (document.body.classList.contains('light-theme')) {
+                themeIcon.className = 'fas fa-sun text-orange-500 transition-all';
+            } else {
+                themeIcon.className = 'fas fa-moon transition-all';
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('#navbar > div');
+            if (window.scrollY > 50) {
+                nav.style.backgroundColor = document.body.classList.contains('light-theme') ? "rgba(255,255,255,0.8)" : "rgba(10,10,10,0.8)";
+                nav.style.backdropFilter = "blur(16px)";
+                nav.classList.add('py-2');
+            } else {
+                nav.style.backgroundColor = "";
+                nav.style.backdropFilter = "";
+                nav.classList.remove('py-2');
+            }
+        }, { passive: true });
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
