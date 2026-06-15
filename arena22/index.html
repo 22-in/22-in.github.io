@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena22 | The Ultimate Discord Bot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg: #050505;
+            --text: #ffffff;
+            --text-dim: #9ca3af;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --saffron: #FF9933;
+            --india-green: #138808;
+            --discord: #5865F2;
+            --discord-hover: #4752c4;
+            --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .light-theme {
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --text-dim: #475569;
+            --card-bg: #ffffff;
+            --border: rgba(0, 0, 0, 0.1);
+            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
+            background-size: 32px 32px;
+            overflow-x: hidden;
+        }
+
+        .code-font { font-family: 'JetBrains Mono', monospace; }
+        
+        .logo-text { color: var(--text) !important; transition: color 0.3s ease; }
+
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            box-shadow: var(--glass-shadow);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .glass:hover { 
+            transform: translateY(-3px); 
+            border-color: var(--discord); 
+            box-shadow: 0 15px 35px rgba(88, 101, 242, 0.15);
+        }
+
+        p, span, li, td { color: var(--text-dim); transition: color 0.3s ease; }
+        h1, h2, h3, h4, h5, strong, .text-important { color: var(--text); transition: color 0.3s ease; }
+
+        .gradient-text {
+            background: linear-gradient(to right, var(--saffron), var(--text), var(--india-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradientAnim 4s linear infinite;
+        }
+        @keyframes gradientAnim {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: 0.5s all cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Custom badge colors that adapt slightly to theme */
+        .badge-saffron { background: rgba(255, 153, 51, 0.1); color: #FF9933; border: 1px solid rgba(255, 153, 51, 0.3); }
+        .badge-discord { background: rgba(88, 101, 242, 0.1); color: #5865F2; border: 1px solid rgba(88, 101, 242, 0.3); }
+        .badge-green { background: rgba(19, 136, 8, 0.1); color: #138808; border: 1px solid rgba(19, 136, 8, 0.3); }
+    </style>
+</head>
+<body class="dark-theme">
+
+    <!-- Subtle Indian Flag Top Border -->
+    <div class="fixed top-0 left-0 w-full h-1 z-[100] bg-gradient-to-r from-[var(--saffron)] via-[var(--text)] to-[var(--india-green)] opacity-80"></div>
+
+    <!-- Nav -->
+    <nav class="fixed w-full z-50 px-4 py-4 mt-1" id="navbar">
+        <div class="max-w-6xl mx-auto glass rounded-full px-6 py-3 flex justify-between items-center shadow-2xl transition-all duration-300">
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
+                <!-- Bot Logo -->
+                <img src="./logo.png" alt="Arena22" class="w-8 h-8 rounded-full border border-[var(--border)] group-hover:scale-110 transition-transform" onerror="this.src='https://ui-avatars.com/api/?name=A+22&background=5865F2&color=fff'">
+                <span class="text-2xl font-extrabold tracking-tighter logo-text">Arena<span class="text-[#5865F2]">22</span></span>
+            </div>
+            
+            <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest">
+                <a href="#commands" class="hover:text-[#5865F2] transition-colors" style="color: var(--text)">Commands</a>
+                <a href="#premium" class="hover:text-[var(--saffron)] transition-colors" style="color: var(--text)">Premium</a>
+                <a href="#team" class="hover:text-[#5865F2] transition-colors" style="color: var(--text)">Developer</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" class="w-10 h-10 rounded-full flex items-center justify-center glass hover:bg-[var(--border)] transition-all">
+                    <i class="fas fa-moon" id="theme-icon" style="color: var(--text)"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-40 pb-16 px-6 text-center min-h-[90vh] flex flex-col justify-center relative">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[600px] max-h-[600px] bg-[#5865F2]/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
+
+        <div class="reveal relative z-10">
+            <span class="text-xs font-black tracking-widest uppercase border border-[var(--saffron)] px-4 py-2 rounded-full text-[var(--saffron)] mb-6 inline-block bg-[rgba(255,153,51,0.05)]">Made in India with Love</span>
+            
+            <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tighter">
+                Rule Your Server. <br> 
+                <span class="gradient-text code-font">&lt;Like a Boss./&gt;</span>
+            </h1>
+            
+            <p class="max-w-2xl mx-auto text-lg md:text-xl font-medium mb-12 leading-relaxed text-important opacity-80">
+                The only Discord Bot you need for real-time web searches, VC token economy, and absolute Boss supremacy. Currently 100% Free.
+            </p>
+            
+            <!-- Sleek CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
+                <!-- Add to Discord -->
+                <a href="#" class="px-8 py-4 bg-[#5865F2] text-white rounded-full font-extrabold tracking-wide hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(88,101,242,0.4)] hover:bg-[var(--discord-hover)] transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center">
+                    <i class="fab fa-discord text-2xl"></i> Invite Arena22
+                </a>
+                
+                <!-- Explore Commands (Scrolls to Features) -->
+                <a href="#commands" class="px-8 py-4 glass rounded-full font-extrabold tracking-wide hover:-translate-y-1 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center" style="color: var(--text)">
+                    <i class="fas fa-terminal opacity-70"></i> Explore Commands
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Highlighted Banner Section -->
+    <section class="px-6 max-w-5xl mx-auto reveal">
+        <div class="glass p-2 md:p-3 rounded-[2rem] overflow-hidden relative group">
+            <div class="absolute inset-0 bg-gradient-to-r from-[var(--saffron)] to-[var(--india-green)] opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none"></div>
+            <!-- Banner Image Here -->
+            <img src="./banner.png" alt="!ask on sand banner" class="w-full h-auto rounded-[1.5rem] object-cover border border-[var(--border)] group-hover:scale-[1.01] transition-transform duration-700" onerror="this.src='https://via.placeholder.com/1200x400/1a1a1a/5865F2?text=Banner+Image+Here'">
+        </div>
+    </section>
+
+    <!-- Core Features / Commands -->
+    <section id="commands" class="py-24 px-6 max-w-4xl mx-auto">
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">Command the Arena</h2>
+            <p class="mt-4 text-lg">Powerful features wrapped in a simple terminal experience.</p>
+        </div>
+        
+        <!-- Professional List Layout -->
+        <div class="flex flex-col gap-6">
+            
+            <!-- !ask Command (Saffron Accent) -->
+            <div class="glass p-6 md:p-8 rounded-[1.5rem] flex flex-col md:flex-row items-start md:items-center gap-6 group hover:border-[var(--saffron)] transition-colors reveal">
+                <div class="px-5 py-2 badge-saffron rounded-lg font-mono font-bold text-lg group-hover:scale-105 transition-transform flex-shrink-0">
+                    &gt; !ask
+                </div>
+                <div class="flex-1 text-left">
+                    <h3 class="text-xl font-bold mb-2">Realtime Web Search</h3>
+                    <p class="text-sm leading-relaxed">Stop leaving Discord to Google. Ask anything in chat and get instant, highly accurate, and up-to-date answers pulled directly from the web.</p>
+                </div>
+            </div>
+            
+            <!-- !top Command (Blue Accent) -->
+            <div class="glass p-6 md:p-8 rounded-[1.5rem] flex flex-col md:flex-row items-start md:items-center gap-6 group hover:border-[#5865F2] transition-colors reveal delay-100">
+                <div class="px-5 py-2 badge-discord rounded-lg font-mono font-bold text-lg group-hover:scale-105 transition-transform flex-shrink-0">
+                    &gt; !top
+                </div>
+                <div class="flex-1 text-left">
+                    <h3 class="text-xl font-bold mb-2">Who's the Boss?</h3>
+                    <p class="text-sm leading-relaxed">Track Voice Channel (VC) tokens and user activity. Check the live leaderboard to find out who truly rules the server and holds the ultimate Boss title.</p>
+                </div>
+            </div>
+            
+            <!-- !said Command (Green Accent) -->
+            <div class="glass p-6 md:p-8 rounded-[1.5rem] flex flex-col md:flex-row items-start md:items-center gap-6 group hover:border-[var(--india-green)] transition-colors reveal delay-200">
+                <div class="px-5 py-2 badge-green rounded-lg font-mono font-bold text-lg group-hover:scale-105 transition-transform flex-shrink-0">
+                    &gt; !said
+                </div>
+                <div class="flex-1 text-left">
+                    <h3 class="text-xl font-bold mb-2">Boss Supremacy</h3>
+                    <p class="text-sm leading-relaxed">Exclusive privileges for the Boss. Force the bot to announce anything you want, plus trigger an automatic, attitude-filled welcome message the moment you come online.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Premium / Roadmap -->
+    <section id="premium" class="py-10 px-6 max-w-4xl mx-auto">
+        <div class="glass p-10 md:p-14 rounded-[2.5rem] text-center reveal relative overflow-hidden group border-[var(--saffron)]">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-[var(--saffron)] opacity-10 rounded-full blur-[80px] pointer-events-none"></div>
+            
+            <span class="inline-block px-4 py-1 rounded-full border border-[var(--india-green)] text-[var(--india-green)] text-xs font-bold uppercase tracking-widest mb-6 bg-[rgba(19,136,8,0.05)]">Currently 100% Free</span>
+            
+            <h2 class="text-3xl md:text-5xl font-black mb-4 tracking-tighter">AI Revolution is Coming.</h2>
+            <p class="text-lg opacity-80 mb-8 max-w-2xl mx-auto">
+                Enjoy Arena22's core features for free. Soon, we are rolling out a Premium Tier featuring advanced AI integrations, extended Boss powers, and a custom economy architecture.
+            </p>
+            
+            <button class="px-8 py-3 bg-[var(--text)] text-[var(--bg)] font-extrabold rounded-full hover:scale-105 transition-transform duration-300 shadow-lg">
+                View Upcoming Plans
+            </button>
+        </div>
+    </section>
+
+    <!-- TEAM / DEVELOPER SECTION -->
+    <section id="team" class="py-16 px-6">
+        <div class="text-center mb-12 reveal">
+            <h2 class="text-4xl md:text-5xl font-black tracking-tighter">Behind Arena22</h2>
+        </div>
+        
+        <!-- Akash Agrawal Box -->
+        <div class="max-w-5xl mx-auto glass p-10 md:p-16 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-12 reveal border-t border-[var(--border)] relative overflow-hidden mb-6">
+            <div class="absolute -top-20 -right-20 w-64 h-64 bg-[#5865F2] opacity-10 rounded-full blur-[80px] pointer-events-none"></div>
+            
+            <div class="w-48 h-48 md:w-64 md:h-64 rounded-[2rem] overflow-hidden rotate-3 shadow-2xl border-4 border-[var(--border)] shrink-0 group hover:rotate-0 transition-transform duration-500">
+                <img src="../AGTech.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Akash Agrawal" onerror="this.src='https://ui-avatars.com/api/?name=Akash+Agrawal&background=5865F2&color=fff'">
+            </div>
+            
+            <div class="flex-1 relative z-10 text-center md:text-left">
+                <span class="text-[#5865F2] font-black uppercase tracking-widest text-sm mb-4 block">Founder & Lead Developer</span>
+                <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter italic">Akash Agrawal</h2>
+                <p class="text-lg leading-relaxed opacity-80 mb-6">
+                    "Arena22 isn't just another bot; it's a statement of absolute dominance. I engineered it to cut through the noise—no useless clutter, just raw, high-performance features. From real-time web intelligence to a custom token economy that crowns the true 'Boss' of your server. It's built for communities that want power, prestige, and attitude. And trust me, we're just getting started."
+                </p>
+                <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                    <span class="px-4 py-2 badge-saffron rounded-lg text-xs font-bold uppercase cursor-default">Proudly Indian</span>
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase border border-[var(--border)] cursor-default">Solo Built</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 22 Company Box -->
+        <div class="max-w-2xl mx-auto glass p-6 md:p-8 rounded-[2rem] flex flex-col sm:flex-row items-center justify-center gap-6 relative overflow-hidden group border-t border-[var(--border)] hover:border-[var(--india-green)] transition-colors reveal delay-100">
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-[var(--india-green)] opacity-10 rounded-full blur-[40px] pointer-events-none"></div>
+            
+            <div class="w-20 h-20 md:w-24 md:h-24 rounded-[1.2rem] overflow-hidden rotate-3 shadow-xl border-2 border-[var(--border)] shrink-0 group-hover:rotate-0 transition-transform duration-500 flex items-center justify-center">
+                <img src="../22logo.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="22 Company" onerror="this.src='https://ui-avatars.com/api/?name=22&background=138808&color=fff'">
+            </div>
+            
+            <div class="text-center sm:text-left relative z-10">
+                <span class="text-[var(--india-green)] font-black uppercase tracking-widest text-[10px] md:text-xs mb-1 block">Parent Entity</span>
+                <h2 class="text-2xl md:text-3xl font-black mb-3 tracking-tighter italic">22 Company</h2>
+                <div class="flex flex-wrap justify-center sm:justify-start gap-2">
+                    <span class="px-2 py-1 badge-discord rounded-md text-[10px] font-bold uppercase cursor-default">Discord Ecosystem</span>
+                    <span class="px-2 py-1 glass rounded-md text-[10px] font-bold uppercase border border-[var(--border)] cursor-default">Vision 2026</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-[var(--border)] mt-10 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-center gap-8 mb-10">
+                
+                <div class="text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+                        <img src="./logo.png" alt="Logo" class="w-6 h-6 rounded-full" onerror="this.style.display='none'">
+                        <div class="text-3xl font-black tracking-tight logo-text">
+                            Arena<span class="text-[#5865F2]">22</span>
+                        </div>
+                    </div>
+                    <p class="text-sm opacity-60 mb-5">Harvesting Potential Everywhere</p>
+                    <div class="flex flex-wrap justify-center md:justify-start gap-4 md:gap-6 text-sm font-semibold">
+                        <a href="#" class="opacity-70 hover:opacity-100 hover:text-[#5865F2] transition duration-300">Privacy Policy</a>
+                        <a href="#" class="opacity-70 hover:opacity-100 hover:text-[#5865F2] transition duration-300">Terms of Service</a>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4">
+                    <a href="https://www.instagram.com/22in_official" target="_blank" class="w-12 h-12 glass rounded-full flex items-center justify-center text-xl hover:-translate-y-2 transition-all hover:text-[#E4405F] hover:border-[#E4405F] shadow-lg">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.youtube.com/@22-in" target="_blank" class="w-12 h-12 glass rounded-full flex items-center justify-center text-xl hover:-translate-y-2 transition-all hover:text-[#FF0000] hover:border-[#FF0000] shadow-lg">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://www.github.com/22-in" target="_blank" class="w-12 h-12 glass rounded-full flex items-center justify-center text-xl hover:-translate-y-2 transition-all hover:text-gray-400 hover:border-gray-400 shadow-lg">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="text-center border-t border-[var(--border)] pt-8">
+                <p class="text-xs opacity-40">© 2026 22 Company. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        const themeBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            if (document.body.classList.contains('light-theme')) {
+                themeIcon.className = 'fas fa-sun transition-all';
+                themeIcon.style.color = '#FF9933';
+            } else {
+                themeIcon.className = 'fas fa-moon transition-all';
+                themeIcon.style.color = 'var(--text)';
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('#navbar > div');
+            if (window.scrollY > 50) {
+                nav.style.backgroundColor = document.body.classList.contains('light-theme') ? "rgba(255,255,255,0.85)" : "rgba(10,10,10,0.85)";
+                nav.style.backdropFilter = "blur(16px)";
+                nav.classList.add('py-2');
+            } else {
+                nav.style.backgroundColor = "";
+                nav.style.backdropFilter = "";
+                nav.classList.remove('py-2');
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html>
