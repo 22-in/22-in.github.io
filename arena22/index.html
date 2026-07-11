@@ -4,49 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arena22 | The Ultimate Discord Bot</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/png" href="./assets/logo.png">
+
+    <!-- 1. Tailwind Dark Mode Config -->
+    <script>
+        window.tailwind = {
+            config: {
+                darkMode: 'class'
+            }
+        }
+    </script>
+
+    <!-- 2. Optimized Theme Setup (Prevents flickering on load) -->
     <script>
         const theme = new URLSearchParams(location.search).get('theme');
-
         if (theme === 'dark' || theme === 'light') {
             localStorage.setItem('theme', theme);
         }
 
         const savedTheme = localStorage.getItem('theme');
-
-        document.documentElement.classList.toggle(
-            'dark',
-            savedTheme
-                ? savedTheme === 'dark'
-                : window.matchMedia('(prefers-color-scheme: dark)').matches
-        );
-        </script>
+        const isDark = savedTheme 
+            ? savedTheme === 'dark' 
+            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (isDark) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
 
+        /* 3. Light Mode Variables (Default) */
         :root {
-            --bg: #050505;
-            --text: #ffffff;
-            --text-dim: #9ca3af;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-            --saffron: #FF9933;
-            --india-green: #138808;
-            --discord: #5865F2;
-            --discord-hover: #4752c4;
-            --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .light-theme {
             --bg: #f8fafc;
             --text: #0f172a;
             --text-dim: #475569;
             --card-bg: #ffffff;
             --border: rgba(0, 0, 0, 0.1);
+            --saffron: #FF9933;
+            --india-green: #138808;
+            --discord: #5865F2;
+            --discord-hover: #4752c4;
             --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 4. Dark Mode Variables */
+        .dark {
+            --bg: #050505;
+            --text: #ffffff;
+            --text-dim: #9ca3af;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
 
         body {
@@ -98,22 +114,20 @@
         }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Custom badge colors that adapt slightly to theme */
         .badge-saffron { background: rgba(255, 153, 51, 0.1); color: #FF9933; border: 1px solid rgba(255, 153, 51, 0.3); }
         .badge-discord { background: rgba(88, 101, 242, 0.1); color: #5865F2; border: 1px solid rgba(88, 101, 242, 0.3); }
         .badge-green { background: rgba(19, 136, 8, 0.1); color: #138808; border: 1px solid rgba(19, 136, 8, 0.3); }
     </style>
 </head>
-<body class="dark-theme">
+<body>
 
     <!-- Subtle Indian Flag Top Border -->
     <div class="fixed top-0 left-0 w-full h-1 z-[100] bg-gradient-to-r from-[var(--saffron)] via-[var(--text)] to-[var(--india-green)] opacity-80"></div>
 
     <!-- Nav -->
-    <nav class="fixed w-full z-50 px-4 py-4 mt-1" id="navbar">
+    <nav class="fixed w-full z-50 px-4 py-4 mt-1 transition-all duration-300" id="navbar">
         <div class="max-w-6xl mx-auto glass rounded-full px-6 py-3 flex justify-between items-center shadow-2xl transition-all duration-300">
             <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
-                <!-- Bot Logo -->
                 <img src="./assets/logo.png" alt="Arena22" class="w-8 h-8 rounded-full border border-[var(--border)] group-hover:scale-110 transition-transform" onerror="this.src='https://ui-avatars.com/api/?name=A+22&background=5865F2&color=fff'">
                 <span class="text-2xl font-extrabold tracking-tighter logo-text">Arena<span class="text-[#5865F2]">22</span></span>
             </div>
@@ -148,14 +162,11 @@
                 The only Discord Bot you need for real-time web searches, VC token economy, and absolute Boss supremacy. Currently 100% Free.
             </p>
             
-            <!-- Sleek CTA Buttons -->
             <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
-                <!-- Add to Discord -->
                 <a href="https://discord.com/oauth2/authorize?client_id=1515636676293165056&permissions=8&integration_type=0&scope=bot" class="px-8 py-4 bg-[#5865F2] text-white rounded-full font-extrabold tracking-wide hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(88,101,242,0.4)] hover:bg-[var(--discord-hover)] transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center">
                     <i class="fab fa-discord text-2xl"></i> Invite Arena22
                 </a>
                 
-                <!-- Explore Commands (Scrolls to Features) -->
                 <a href="#commands" class="px-8 py-4 glass rounded-full font-extrabold tracking-wide hover:-translate-y-1 transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center" style="color: var(--text)">
                     <i class="fas fa-terminal opacity-70"></i> Explore Commands
                 </a>
@@ -167,7 +178,6 @@
     <section class="px-6 max-w-5xl mx-auto reveal">
         <div class="glass p-2 md:p-3 rounded-[2rem] overflow-hidden relative group">
             <div class="absolute inset-0 bg-gradient-to-r from-[var(--saffron)] to-[var(--india-green)] opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none"></div>
-            <!-- Banner Image Here -->
             <img src="./assets/banner.png" alt="!ask on sand banner" class="w-full h-auto rounded-[1.5rem] object-cover border border-[var(--border)] group-hover:scale-[1.01] transition-transform duration-700" onerror="this.src='https://via.placeholder.com/1200x400/1a1a1a/5865F2?text=Banner+Image+Here'">
         </div>
     </section>
@@ -179,10 +189,7 @@
             <p class="mt-4 text-lg">Powerful features wrapped in a simple terminal experience.</p>
         </div>
         
-        <!-- Professional List Layout -->
         <div class="flex flex-col gap-6">
-            
-            <!-- !ask Command (Saffron Accent) -->
             <div class="glass p-6 md:p-8 rounded-[1.5rem] flex flex-col md:flex-row items-start md:items-center gap-6 group hover:border-[var(--saffron)] transition-colors reveal">
                 <div class="px-5 py-2 badge-saffron rounded-lg font-mono font-bold text-lg group-hover:scale-105 transition-transform flex-shrink-0">
                     &gt; !ask
@@ -193,7 +200,6 @@
                 </div>
             </div>
             
-            <!-- !top Command (Blue Accent) -->
             <div class="glass p-6 md:p-8 rounded-[1.5rem] flex flex-col md:flex-row items-start md:items-center gap-6 group hover:border-[#5865F2] transition-colors reveal delay-100">
                 <div class="px-5 py-2 badge-discord rounded-lg font-mono font-bold text-lg group-hover:scale-105 transition-transform flex-shrink-0">
                     &gt; !top
@@ -204,7 +210,6 @@
                 </div>
             </div>
             
-            <!-- !said Command (Green Accent) -->
             <div class="glass p-6 md:p-8 rounded-[1.5rem] flex flex-col md:flex-row items-start md:items-center gap-6 group hover:border-[var(--india-green)] transition-colors reveal delay-200">
                 <div class="px-5 py-2 badge-green rounded-lg font-mono font-bold text-lg group-hover:scale-105 transition-transform flex-shrink-0">
                     &gt; !said
@@ -234,8 +239,6 @@
                     <p class="text-sm leading-relaxed">Translate any language instantly with ease — break barriers, connect globally, and make communication simple, fast, and reliable.</p>
                 </div>
             </div>
-
-
         </div>
     </section>
 
@@ -263,7 +266,6 @@
             <h2 class="text-4xl md:text-5xl font-black tracking-tighter">Behind Arena22</h2>
         </div>
         
-        <!-- Akash Agrawal Box -->
         <div class="max-w-5xl mx-auto glass p-10 md:p-16 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-12 reveal border-t border-[var(--border)] relative overflow-hidden mb-6">
             <div class="absolute -top-20 -right-20 w-64 h-64 bg-[#5865F2] opacity-10 rounded-full blur-[80px] pointer-events-none"></div>
             
@@ -284,7 +286,6 @@
             </div>
         </div>
 
-        <!-- 22 Company Box -->
         <div class="max-w-2xl mx-auto glass p-6 md:p-8 rounded-[2rem] flex flex-col sm:flex-row items-center justify-center gap-6 relative overflow-hidden group border-t border-[var(--border)] hover:border-[var(--india-green)] transition-colors reveal delay-100">
             <div class="absolute -top-10 -left-10 w-32 h-32 bg-[var(--india-green)] opacity-10 rounded-full blur-[40px] pointer-events-none"></div>
             
@@ -344,8 +345,9 @@
         </div>
     </footer>
 
-    <!-- JavaScript -->
+    <!-- Optimized JavaScript -->
     <script>
+        // Reveal elements on scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -355,24 +357,45 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+        // Theme Toggle Functionality
         const themeBtn = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
 
-        themeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('light-theme');
-            if (document.body.classList.contains('light-theme')) {
-                themeIcon.className = 'fas fa-sun transition-all';
-                themeIcon.style.color = '#FF9933';
-            } else {
-                themeIcon.className = 'fas fa-moon transition-all';
+        function updateThemeUI() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                themeIcon.className = 'fas fa-moon transition-all duration-300';
                 themeIcon.style.color = 'var(--text)';
+            } else {
+                themeIcon.className = 'fas fa-sun transition-all duration-300';
+                themeIcon.style.color = '#FF9933';
             }
+        }
+
+        // Set initial icon on load
+        updateThemeUI();
+
+        themeBtn.addEventListener('click', () => {
+            // Toggle 'dark' class on HTML tag
+            const isDarkNow = document.documentElement.classList.toggle('dark');
+            
+            // Save user preference
+            localStorage.setItem('theme', isDarkNow ? 'dark' : 'light');
+            
+            // Update Icon
+            updateThemeUI();
+            
+            // Instantly update navbar background if user is scrolled down
+            updateNavbarBackground(window.scrollY);
         });
 
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('#navbar > div');
-            if (window.scrollY > 50) {
-                nav.style.backgroundColor = document.body.classList.contains('light-theme') ? "rgba(255,255,255,0.85)" : "rgba(10,10,10,0.85)";
+        // Dynamic Navbar Background on Scroll
+        const nav = document.querySelector('#navbar > div');
+        
+        function updateNavbarBackground(scrollY) {
+            if (scrollY > 50) {
+                const isDark = document.documentElement.classList.contains('dark');
+                nav.style.backgroundColor = isDark ? "rgba(10,10,10,0.85)" : "rgba(255,255,255,0.85)";
                 nav.style.backdropFilter = "blur(16px)";
                 nav.classList.add('py-2');
             } else {
@@ -380,7 +403,14 @@
                 nav.style.backdropFilter = "";
                 nav.classList.remove('py-2');
             }
+        }
+
+        window.addEventListener('scroll', () => {
+            updateNavbarBackground(window.scrollY);
         }, { passive: true });
+        
+        // Ensure navbar looks correct on load if already scrolled
+        updateNavbarBackground(window.scrollY);
     </script>
 </body>
 </html>
