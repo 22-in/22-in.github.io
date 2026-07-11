@@ -4,59 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pulse | Smart Health AI IDE for your Body</title>
+    
+    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 1. Tailwind Dark Mode Config -->
+    <script>
+        window.tailwind = {
+            config: {
+                darkMode: 'class'
+            }
+        }
+    </script>
+
+    <!-- 2. Optimized Theme Setup (Prevents flickering on load) -->
     <script>
         const theme = new URLSearchParams(location.search).get('theme');
-
         if (theme === 'dark' || theme === 'light') {
             localStorage.setItem('theme', theme);
         }
 
         const savedTheme = localStorage.getItem('theme');
+        const isDark = savedTheme 
+            ? savedTheme === 'dark' 
+            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (isDark) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 
-        document.documentElement.classList.toggle(
-            'dark',
-            savedTheme
-                ? savedTheme === 'dark'
-                : window.matchMedia('(prefers-color-scheme: dark)').matches
-        );
-        </script>
-
-    <!-- Fonts same as Quick Code -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
 
+        /* ==========================================
+           3. LIGHT MODE VARIABLES (Default)
+           ========================================== */
         :root {
-            --bg: #050505;
-            --text: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.7);
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --text-dim: #475569;
+            --card-bg: #ffffff;
+            --border: rgba(0, 0, 0, 0.1);
+            
+            /* Brand Colors */
             --saffron: #FF9933;
             --india-green: #138808;
             --pulse-red: #ff4b2b;
             --ai-purple: #8a2be2;
         }
 
-        .light-theme {
-            --bg: #f8fafc;
-            --text: #0f172a;
-            --text-dim: #475569;
-            --card-bg: #ffffff;
-            --border: rgba(0, 0, 0, 0.1);
+        /* ==========================================
+           4. DARK MODE VARIABLES
+           ========================================== */
+        .dark {
+            --bg: #050505;
+            --text: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
+        /* ==========================================
+           5. BASE STYLES
+           ========================================== */
         body {
             font-family: 'Bricolage Grotesque', sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            transition: all 0.4s ease;
+            transition: background-color 0.4s ease, color 0.4s ease;
             background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
             background-size: 32px 32px;
+            overflow-x: hidden;
         }
 
         .code-font { font-family: 'JetBrains Mono', monospace; }
+
+        .logo-text { color: #000000 !important; transition: color 0.3s ease; }
+        .dark .logo-text { color: #ffffff !important; }
 
         .glass {
             background: var(--card-bg);
@@ -64,10 +92,17 @@
             border: 1px solid var(--border);
             transition: all 0.3s ease;
         }
-        .glass:hover { transform: translateY(-5px); border-color: var(--saffron); }
+        .glass:hover { 
+            transform: translateY(-5px); 
+            border-color: var(--saffron); 
+            box-shadow: 0 10px 30px rgba(255, 153, 51, 0.1);
+        }
+
+        p, span, li, td { color: var(--text-dim); transition: color 0.3s ease; }
+        h1, h2, h3, h4, h5, strong, .text-important { color: var(--text); transition: color 0.3s ease; }
 
         .gradient-text {
-            background: linear-gradient(to right, var(--saffron), #ffffff, var(--india-green));
+            background: linear-gradient(to right, var(--saffron), var(--text), var(--india-green));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-size: 200% auto;
@@ -78,9 +113,7 @@
             100% { background-position: 200% center; }
         }
 
-        .heartbeat {
-            animation: beat 1.5s infinite;
-        }
+        .heartbeat { animation: beat 1.5s infinite; }
         @keyframes beat {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
@@ -95,46 +128,47 @@
             left: 50%;
             transform: translateX(-50%);
             background: var(--india-green);
-            color: white;
+            color: white !important;
             padding: 12px 24px;
             border-radius: 50px;
             z-index: 1000;
             transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             font-weight: 700;
+            box-shadow: 0 10px 30px rgba(19, 136, 8, 0.3);
         }
         #toast.show { bottom: 40px; }
 
         .ai-glow {
-            box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.15);
             border: 1px solid var(--ai-purple) !important;
         }
     </style>
 </head>
-<body class="dark-theme">
+<body>
 
     <div id="toast">Connecting to Pulse Server...</div>
 
     <!-- Nav -->
-    <nav class="fixed w-full z-50 px-4 py-4" id="navbar">
-        <div class="max-w-6xl mx-auto glass rounded-full px-6 py-3 flex justify-between items-center shadow-2xl">
+    <nav class="fixed w-full z-50 px-4 py-4 transition-all duration-300" id="navbar">
+        <div class="max-w-6xl mx-auto glass rounded-full px-6 py-3 flex justify-between items-center shadow-2xl transition-all duration-300">
             <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
-                <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white font-black text-xs heartbeat">
+                <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white font-black text-xs heartbeat shadow-lg shadow-orange-500/40">
                     <i class="fas fa-heartbeat"></i>
                 </div>
-                <span class="text-xl font-extrabold tracking-tighter">PULSE<span class="text-orange-500">.AI</span></span>
+                <span class="text-xl font-extrabold tracking-tighter logo-text">PULSE<span class="text-orange-500">.AI</span></span>
             </div>
             
             <div class="hidden md:flex gap-8 text-xs font-black uppercase tracking-widest">
-                <a href="#features" class="hover:text-orange-500">Sensors</a>
-                <a href="#ai-tech" class="hover:text-orange-500">Personalized AI</a>
-                <a href="#pricing" class="hover:text-orange-500">Get Pro</a>
+                <a href="#features" class="hover:text-orange-500 transition-colors" style="color: var(--text)">Sensors</a>
+                <a href="#ai-tech" class="hover:text-orange-500 transition-colors" style="color: var(--text)">Personalized AI</a>
+                <a href="#pricing" class="hover:text-orange-500 transition-colors" style="color: var(--text)">Get Pro</a>
             </div>
 
             <div class="flex items-center gap-3">
-                <button id="theme-toggle" class="w-10 h-10 rounded-full flex items-center justify-center glass">
-                    <i class="fas fa-moon" id="theme-icon"></i>
+                <button id="theme-toggle" class="w-10 h-10 rounded-full flex items-center justify-center glass hover:bg-[var(--border)] transition-all">
+                    <i class="fas fa-moon" id="theme-icon" style="color: var(--text)"></i>
                 </button>
-                <a href="#" class="bg-orange-500 text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform">Install App</a>
+                <a href="#" class="bg-orange-500 text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-lg shadow-orange-500/30">Install App</a>
             </div>
         </div>
     </nav>
@@ -142,33 +176,37 @@
     <!-- Hero -->
     <section class="pt-48 pb-20 px-6 text-center">
         <div class="reveal">
-            <span class="text-xs font-black tracking-widest uppercase border border-orange-500/30 px-4 py-2 rounded-full text-orange-500 mb-6 inline-block">Bharat's First AI Wearable OS</span>
+            <span class="text-xs font-black tracking-widest uppercase border border-orange-500/30 px-4 py-2 rounded-full text-orange-500 mb-6 inline-block bg-orange-500/5">Bharat's First AI Wearable OS</span>
             <h1 class="text-5xl md:text-8xl font-black mb-6 tracking-tighter">Your Heartbeat <br> <span class="gradient-text code-font">Meets Intelligence.</span>
             </h1>
-            <p class="max-w-2xl mx-auto text-lg md:text-xl font-medium mb-10 leading-relaxed">
+            <p class="max-w-2xl mx-auto text-lg md:text-xl font-medium mb-10 leading-relaxed opacity-80">
                 Pulse transforms your smartwatch into a lifesaver. Real-time sensor monitoring fused with AI that knows you better than yourself.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#features" class="bg-white text-black px-10 py-4 rounded-2xl font-black text-lg hover:bg-orange-500 hover:text-white transition-all shadow-xl">Watch Sensors</a>
+                <!-- Theme adapting button -->
+                <a href="#features" class="bg-[var(--text)] text-[var(--bg)] px-10 py-4 rounded-2xl font-black text-lg hover:bg-orange-500 hover:text-white transition-all shadow-xl">Watch Sensors</a>
                 <a href="#pricing" class="glass px-10 py-4 rounded-2xl font-black text-lg">Lifetime Offer ₹99</a>
             </div>
         </div>
     </section>
 
-    <!-- AI Feature Spotlight (The unique part) -->
+    <!-- AI Feature Spotlight -->
     <section id="ai-tech" class="py-24 px-6 max-w-6xl mx-auto">
-        <div class="ai-glow glass p-10 md:p-16 rounded-[3rem] text-center reveal">
-            <h2 class="text-3xl md:text-5xl font-black mb-6">Context-Aware <span class="text-purple-500">AI</span></h2>
-            <p class="text-xl max-w-3xl mx-auto mb-10 opacity-80">
+        <div class="ai-glow glass p-10 md:p-16 rounded-[3rem] text-center reveal relative overflow-hidden group">
+            <div class="absolute -top-20 -right-20 w-64 h-64 bg-purple-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+
+            <h2 class="text-3xl md:text-5xl font-black mb-6 relative z-10">Context-Aware <span class="text-purple-500">AI</span></h2>
+            <p class="text-xl max-w-3xl mx-auto mb-10 opacity-80 relative z-10">
                 Pulse doesn't just answer your questions. It attaches your <span class="text-orange-500 font-bold">Heart Rate, SpO2, and Stress levels</span> to every query, giving you medical-grade personalized insights.
             </p>
-            <div class="grid md:grid-cols-2 gap-8 text-left">
-                <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
-                    <p class="text-xs font-bold text-purple-400 mb-2 uppercase tracking-widest">Normal AI asks:</p>
+            <div class="grid md:grid-cols-2 gap-8 text-left relative z-10">
+                <!-- Added Tailwind dark mode classes to fix light-mode visibility -->
+                <div class="bg-black/5 dark:bg-white/5 p-6 rounded-2xl border border-black/10 dark:border-white/10 hover:border-purple-500/30 transition-colors">
+                    <p class="text-xs font-bold text-purple-500 dark:text-purple-400 mb-2 uppercase tracking-widest">Normal AI asks:</p>
                     <p class="italic text-lg">"Give me a workout plan."</p>
                 </div>
-                <div class="bg-purple-500/10 p-6 rounded-2xl border border-purple-500/30">
-                    <p class="text-xs font-bold text-orange-400 mb-2 uppercase tracking-widest">Pulse AI answers:</p>
+                <div class="bg-purple-500/10 p-6 rounded-2xl border border-purple-500/30 hover:border-orange-500/50 transition-colors">
+                    <p class="text-xs font-bold text-orange-500 dark:text-orange-400 mb-2 uppercase tracking-widest">Pulse AI answers:</p>
                     <p class="italic text-lg">"Your heart rate is 110bpm & stress is high. Instead of a workout, let's do 5 mins of box breathing."</p>
                 </div>
             </div>
@@ -177,24 +215,24 @@
 
     <!-- Features -->
     <section id="features" class="py-24 px-6 max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
-        <div class="glass p-10 rounded-[2rem] reveal">
-            <i class="fas fa-microchip text-orange-500 text-3xl mb-6"></i>
+        <div class="glass p-10 rounded-[2rem] reveal hover:border-orange-500/50 transition-colors group">
+            <i class="fas fa-microchip text-orange-500 text-3xl mb-6 group-hover:scale-110 transition-transform"></i>
             <h3 class="text-2xl font-black mb-3">Live Sensor Sync</h3>
             <p>Direct low-latency access to heart rate, pedometer, and sleep sensors via Bluetooth LE.</p>
         </div>
-        <div class="glass p-10 rounded-[2rem] reveal delay-100">
-            <i class="fas fa-bell text-red-500 text-3xl mb-6"></i>
+        <div class="glass p-10 rounded-[2rem] reveal delay-100 hover:border-red-500/50 transition-colors group">
+            <i class="fas fa-bell text-red-500 text-3xl mb-6 group-hover:scale-110 transition-transform"></i>
             <h3 class="text-2xl font-black mb-3">Instant Alerts</h3>
             <p>Emergency SOS triggers if sensors detect irregular patterns or sudden falls.</p>
         </div>
-        <div class="glass p-10 rounded-[2rem] reveal delay-200">
-            <i class="fas fa-brain text-green-500 text-3xl mb-6"></i>
+        <div class="glass p-10 rounded-[2rem] reveal delay-200 hover:border-green-500/50 transition-colors group">
+            <i class="fas fa-brain text-green-500 text-3xl mb-6 group-hover:scale-110 transition-transform"></i>
             <h3 class="text-2xl font-black mb-3">Personalized Brain</h3>
             <p>Every response is tuned to your physical state at that exact millisecond.</p>
         </div>
     </section>
 
-    <!-- Pricing (Same as your Quick Code) -->
+    <!-- Pricing -->
     <section id="pricing" class="py-24 px-6 max-w-7xl mx-auto">
         <div class="text-center mb-16 reveal">
             <h2 class="text-4xl md:text-6xl font-black tracking-tighter">Invest in Your Health</h2>
@@ -202,74 +240,77 @@
         </div>
 
         <div class="grid lg:grid-cols-3 gap-8">
-            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal">
+            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal border-t border-[var(--border)]">
                 <h3 class="text-xl font-black opacity-50 uppercase mb-4 tracking-widest">Base</h3>
                 <div class="text-5xl font-black mb-8">₹0 <span class="text-base font-medium opacity-40">/free</span></div>
-                <ul class="space-y-4 mb-10 flex-grow">
+                <ul class="space-y-4 mb-10 flex-grow font-medium">
                     <li><i class="fas fa-check text-green-500 mr-2"></i> Real-time HR Sync</li>
                     <li><i class="fas fa-check text-green-500 mr-2"></i> Daily Health Logs</li>
                     <li><i class="fas fa-times text-red-500 mr-2"></i> AI Personalization</li>
                 </ul>
-                <button class="w-full py-4 glass rounded-xl font-black">Download Free</button>
+                <button class="w-full py-4 glass rounded-xl font-black opacity-50 cursor-not-allowed">Active Plan</button>
             </div>
 
-            <div class="glass p-8 rounded-[2.5rem] flex flex-col border-2 border-orange-500/50 reveal delay-100 scale-105 z-10 shadow-2xl shadow-orange-500/10">
-                <div class="bg-gradient-to-r from-orange-500 to-green-600 text-white text-[10px] py-1 px-4 rounded-full absolute -top-3 left-1/2 -translate-x-1/2 font-black">LAUNCH OFFER</div>
-                <h3 class="text-xl font-black text-orange-500 uppercase mb-4 tracking-widest">Pulse Pro</h3>
+            <div class="glass p-8 rounded-[2.5rem] flex flex-col border-2 border-orange-500 reveal delay-100 scale-105 z-10 shadow-[0_0_30px_rgba(255,153,51,0.15)] relative">
+                <div class="bg-gradient-to-r from-orange-500 to-green-600 text-white text-[10px] py-1 px-4 rounded-full absolute -top-3 left-1/2 -translate-x-1/2 font-black shadow-lg">LAUNCH OFFER</div>
+                <h3 class="text-xl font-black text-orange-500 uppercase mb-4 tracking-widest drop-shadow-[0_0_8px_rgba(255,153,51,0.5)]">Pulse Pro</h3>
                 <div class="text-5xl font-black mb-2">₹99 <span class="text-base font-medium opacity-40">/once</span></div>
-                <p class="text-xs font-bold text-orange-400 mb-8">Exclusive for first 500 users</p>
-                <ul class="space-y-4 mb-10 flex-grow font-bold">
+                <p class="text-xs font-bold text-orange-500 mb-8 bg-orange-500/10 inline-block px-2 py-1 rounded-md w-fit">Exclusive for first 500 users</p>
+                <ul class="space-y-4 mb-10 flex-grow font-bold text-[var(--text)]">
                     <li><i class="fas fa-infinity text-orange-500 mr-2"></i> <strong>Everything Forever</strong></li>
                     <li><i class="fas fa-robot text-orange-500 mr-2"></i> Full AI Integration</li>
                     <li><i class="fas fa-phone-alt text-orange-500 mr-2"></i> Emergency SOS Calls</li>
                     <li><i class="fas fa-history text-orange-500 mr-2"></i> Lifetime Data Backup</li>
                 </ul>
-                <button class="w-full py-4 bg-orange-500 text-white rounded-xl font-black hover:scale-105 transition-transform">Buy Lifetime</button>
+                <button class="w-full py-4 bg-orange-500 text-white rounded-xl font-black hover:scale-105 transition-transform shadow-lg shadow-orange-500/20">Buy Lifetime</button>
             </div>
 
-            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal delay-200">
+            <div class="glass p-8 rounded-[2.5rem] flex flex-col reveal delay-200 border-t border-[var(--border)]">
                 <h3 class="text-xl font-black text-blue-500 uppercase mb-4 tracking-widest">Team</h3>
                 <div class="text-5xl font-black mb-8">₹499 <span class="text-base font-medium opacity-40">/family</span></div>
-                <ul class="space-y-4 mb-10 flex-grow">
+                <ul class="space-y-4 mb-10 flex-grow font-medium">
                     <li><i class="fas fa-users text-blue-500 mr-2"></i> Up to 5 Members</li>
                     <li><i class="fas fa-chart-line text-blue-500 mr-2"></i> Shared Health Dashboard</li>
                     <li><i class="fas fa-shield-alt text-blue-500 mr-2"></i> Remote Alerts</li>
                 </ul>
-                <button class="w-full py-4 glass rounded-xl font-black hover:bg-blue-600 hover:text-white transition-all">Select Plan</button>
+                <button class="w-full py-4 glass rounded-xl font-black hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">Select Plan</button>
             </div>
         </div>
     </section>
 
     <!-- Developer (Personal Touch) -->
     <section id="developer" class="py-24 px-6">
-        <div class="max-w-5xl mx-auto glass p-10 md:p-16 rounded-[3rem] flex flex-col md:flex-row items-center gap-12 reveal">
-            <div class="w-48 h-48 md:w-64 md:h-64 rounded-[2rem] overflow-hidden -rotate-3 shadow-2xl border-4 border-white/5">
-                <img src="AGTech.jpg" class="w-full h-full object-cover" alt="Akash" onerror="this.src='https://ui-avatars.com/api/?name=Akash+Agrawal&background=FF9933&color=fff'">
+        <div class="max-w-5xl mx-auto glass p-10 md:p-16 rounded-[3rem] flex flex-col md:flex-row items-center gap-12 reveal relative overflow-hidden group">
+            <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-orange-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+
+            <div class="w-48 h-48 md:w-64 md:h-64 rounded-[2rem] overflow-hidden -rotate-3 shadow-2xl border-4 border-[var(--border)] shrink-0 group-hover:rotate-0 transition-transform duration-500">
+                <img src="AGTech.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Akash" onerror="this.src='https://ui-avatars.com/api/?name=Akash+Agrawal&background=FF9933&color=fff'">
             </div>
-            <div class="flex-1">
+            <div class="flex-1 relative z-10 text-center md:text-left">
                 <span class="text-orange-500 font-black uppercase tracking-widest text-sm mb-4 block">The Visionary</span>
                 <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter italic">Akash Agrawal</h2>
                 <p class="text-lg leading-relaxed opacity-80 mb-6">
                     "Technology shouldn't just be on your wrist; it should understand your soul. Pulse is my attempt to bridge the gap between human biology and artificial intelligence."
                 </p>
-                <div class="flex gap-4">
-                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase border-orange-500/20">Pulse OS v1.0</span>
-                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase text-orange-500">22 Company</span>
+                <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase border-orange-500/30 text-orange-500 cursor-default">Pulse OS v1.0</span>
+                    <span class="px-4 py-2 glass rounded-lg text-xs font-bold uppercase border-[var(--border)] cursor-default">22 Company</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer same as Quick Code -->
-    <footer class="py-12 border-t border-white/10 text-center">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="text-xl font-black tracking-tighter mb-4">PULSE<span class="text-orange-500">.AI</span></div>
-            <p class="text-xs font-bold opacity-40 uppercase tracking-[0.3em]">&copy; 2024 22 Company | Harvesting Health Everywhere</p>
+    <!-- Footer updated to 2026 to match Vision 2026 of 22 Company -->
+    <footer class="py-12 border-t border-[var(--border)] text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-6 relative z-10">
+            <div class="text-xl font-black tracking-tighter mb-4 logo-text">PULSE<span class="text-orange-500">.AI</span></div>
+            <p class="text-xs font-bold opacity-40 uppercase tracking-[0.3em]">&copy; 2026 22 Company | Harvesting Health Everywhere</p>
         </div>
     </footer>
 
+    <!-- Optimized JavaScript -->
     <script>
-        // Copy-pasted your smooth logic for consistency
+        // Scroll Animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('active');
@@ -277,25 +318,63 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+        // Theme & Navbar Sync Logic
         const themeBtn = document.getElementById('theme-toggle');
-        themeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('light-theme');
-            const icon = document.getElementById('theme-icon');
-            if (document.body.classList.contains('light-theme')) {
-                icon.className = 'fas fa-sun text-orange-500';
-            } else {
-                icon.className = 'fas fa-moon';
-            }
-        });
+        const themeIcon = document.getElementById('theme-icon');
+        const nav = document.querySelector('#navbar > div');
 
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('#navbar > div');
-            if (window.scrollY > 50) {
-                nav.style.backgroundColor = document.body.classList.contains('light-theme') ? "rgba(255,255,255,0.9)" : "rgba(10,10,10,0.9)";
+        function updateUI() {
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            // Icon Updates
+            if (isDark) {
+                themeIcon.className = 'fas fa-moon transition-all duration-300';
+                themeIcon.style.color = 'white';
             } else {
-                nav.style.backgroundColor = "";
+                themeIcon.className = 'fas fa-sun text-orange-500 transition-all duration-300';
+                themeIcon.style.color = '';
             }
-        });
+
+            // Navbar Background Updates
+            if (nav) {
+                if (window.scrollY > 50) {
+                    nav.style.backgroundColor = isDark ? "rgba(17, 24, 39, 0.85)" : "rgba(255, 255, 255, 0.85)";
+                    nav.style.backdropFilter = "blur(16px)";
+                    nav.classList.add('py-2');
+                } else {
+                    nav.style.backgroundColor = "";
+                    nav.style.backdropFilter = "";
+                    nav.classList.remove('py-2');
+                }
+            }
+        }
+
+        // Initialize UI on load
+        updateUI();
+
+        // Button Click Event
+        if(themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const isDarkNow = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', isDarkNow ? 'dark' : 'light');
+                updateUI();
+            });
+        }
+
+        // Scroll Event for Navbar
+        window.addEventListener('scroll', () => {
+            updateUI();
+        }, { passive: true });
+
+        // Toast logic just in case it's triggered
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.innerText = message;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+        }
     </script>
 </body>
 </html>

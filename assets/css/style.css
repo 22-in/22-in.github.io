@@ -1,28 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
 
+/* ==========================================
+   1. LIGHT MODE VARIABLES (Default)
+   ========================================== */
 :root {
-    --bg: #050505;
-    --text: #ffffff;
-    --text-dim: rgba(255, 255, 255, 0.7);
-    --card-bg: rgba(255, 255, 255, 0.03);
-    --border: rgba(255, 255, 255, 0.08);
-    --saffron: #FF9933;
-    --india-green: #138808;
-    --code-blue: #3b82f6;
-    --table-hover: rgba(255, 255, 255, 0.02);
-    --input-bg: rgba(255, 255, 255, 0.03);
-}
-
-.light-theme {
     --bg: #f8fafc;
     --text: #0f172a;
     --text-dim: #475569;
     --card-bg: #ffffff;
     --border: rgba(0, 0, 0, 0.08);
     --table-hover: rgba(0, 0, 0, 0.02);
-    --input-bg: transparent;
+    --input-bg: #f1f5f9;
+    
+    /* Brand Colors (Same in both themes) */
+    --saffron: #FF9933;
+    --india-green: #138808;
+    --code-blue: #3b82f6;
 }
 
+/* ==========================================
+   2. DARK MODE VARIABLES
+   ========================================== */
+.dark {
+    --bg: #050505;
+    --text: #ffffff;
+    --text-dim: rgba(255, 255, 255, 0.7);
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.08);
+    --table-hover: rgba(255, 255, 255, 0.02);
+    --input-bg: rgba(255, 255, 255, 0.03);
+}
+
+/* ==========================================
+   3. BASE STYLES
+   ========================================== */
 body {
     font-family: 'Bricolage Grotesque', sans-serif;
     background-color: var(--bg);
@@ -35,9 +46,22 @@ body {
 
 .code-font { font-family: 'JetBrains Mono', monospace; }
 
-.logo-text { color: #ffffff !important; transition: color 0.3s ease; }
-.light-theme .logo-text { color: #000000 !important; }
+p, span, li, td { color: var(--text-dim); transition: color 0.3s ease; }
+h1, h2, h3, h4, h5, strong, .text-important, th { color: var(--text); transition: color 0.3s ease; }
 
+/* ==========================================
+   4. COMPONENTS (Glass, Logo, Badges)
+   ========================================== */
+/* Logo Text */
+.logo-text { color: #000000 !important; transition: color 0.3s ease; }
+.dark .logo-text { color: #ffffff !important; }
+
+/* Text White Overrides (Kept for compatibility) */
+.text-white { color: #0f172a !important; } /* Defaults to dark in light mode */
+.dark .text-white { color: #ffffff !important; } /* White in dark mode */
+#downloadModal .text-white { color: #ffffff !important; } /* Always white inside modal */
+
+/* Glass Cards */
 .glass {
     background: var(--card-bg);
     backdrop-filter: blur(12px);
@@ -49,15 +73,11 @@ body {
     border-color: var(--code-blue); 
     box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
 }
-
 .glass.no-hover-transform:hover {
     transform: none;
 }
 
-p, span, li, td { color: var(--text-dim); }
-h1, h2, h3, h4, h5, strong, .text-important, th { color: var(--text); }
-.light-theme .text-white { color: #0f172a !important; }
-
+/* Premium Code Badge */
 code.premium-badge {
     background: rgba(128, 128, 128, 0.15);
     padding: 2px 6px;
@@ -67,14 +87,16 @@ code.premium-badge {
     color: var(--code-blue);
 }
 
+/* Lifetime Card Glow */
 .lifetime-glow {
     position: relative;
     border: 2px solid var(--saffron) !important;
     box-shadow: 0 0 20px rgba(255, 153, 51, 0.15);
 }
 
+/* Gradient Animated Text */
 .gradient-text {
-    background: linear-gradient(to right, var(--saffron), #ffffff, var(--india-green));
+    background: linear-gradient(to right, var(--saffron), var(--text), var(--india-green));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-size: 200% auto;
@@ -85,6 +107,7 @@ code.premium-badge {
     100% { background-position: 200% center; }
 }
 
+/* Limited Badge */
 .limited-badge {
     background: linear-gradient(90deg, var(--saffron), var(--india-green));
     color: white !important;
@@ -100,13 +123,21 @@ code.premium-badge {
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.reveal { 
-    opacity: 0; 
-    transform: translateY(20px); 
-    transition: 0.35s all cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+/* ==========================================
+   5. UI ELEMENTS (Inputs, Toast, Modal)
+   ========================================== */
+/* Inputs and Textareas */
+input, textarea { 
+    color: var(--text); 
+    background: var(--input-bg); 
+    border: 1px solid var(--border);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
-.reveal.active { opacity: 1; transform: translateY(0); }
+.dark input, .dark textarea {
+    border: 1px solid transparent;
+}
 
+/* Toast Notification */
 #toast {
     position: fixed;
     bottom: -100px;
@@ -122,6 +153,7 @@ code.premium-badge {
 }
 #toast.show { bottom: 40px; }
 
+/* Download Modal */
 #downloadModal {
     display: none;
     position: fixed;
@@ -132,19 +164,24 @@ code.premium-badge {
     justify-content: center;
     backdrop-filter: blur(8px);
 }
-#downloadModal .text-white { color: white !important; }
 
+/* ==========================================
+   6. SCREENSHOT MOCKUPS & SCROLLBAR
+   ========================================== */
 .ss-container { perspective: 1000px; }
 .ss-mockup {
     width: 275px;
     margin: 0 auto;
     border-radius: 1.5rem;
-    border: 6px solid #111;
+    border: 6px solid #cbd5e1; /* Light mode default */
     background: #000;
     overflow: hidden;
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transform: rotateY(-10deg) rotateX(5deg);
+}
+.dark .ss-mockup { 
+    border-color: #111; 
 }
 .ss-mockup:hover {
     transform: rotateY(0deg) rotateX(0deg) scale(1.05);
@@ -152,11 +189,21 @@ code.premium-badge {
     box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
     z-index: 20;
 }
-.light-theme .ss-mockup { border-color: #cbd5e1; }
 
+/* Custom Scrollbar for Table */
 .custom-scrollbar::-webkit-scrollbar { height: 6px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: var(--card-bg); border-radius: 10px; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--code-blue); border-radius: 10px; }
 
-input, textarea { color: var(--text); background: var(--input-bg); }
-.light-theme input, .light-theme textarea { background: #f1f5f9; border: 1px solid var(--border); }
+/* ==========================================
+   7. ANIMATIONS (Scroll Reveal)
+   ========================================== */
+.reveal { 
+    opacity: 0; 
+    transform: translateY(20px); 
+    transition: 0.35s all cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+}
+.reveal.active { 
+    opacity: 1; 
+    transform: translateY(0); 
+}

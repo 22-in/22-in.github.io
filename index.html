@@ -5,32 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="UG7HCpySg8LPEazrQAE7kO_21fMUfXzeplqL8syFNqY" />
     <title>Quick Code | Build your Dream into Code.</title>
+    
+    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Original Favicon -->
     <link rel="icon" type="image/png" href="./assets/icons/sitelogo.png">
+
+    <!-- 1. Tailwind Dark Mode Config -->
+    <script>
+        window.tailwind = {
+            config: {
+                darkMode: 'class'
+            }
+        }
+    </script>
+
+    <!-- 2. Optimized Theme Setup (Prevents flickering on load) -->
     <script>
         const theme = new URLSearchParams(location.search).get('theme');
-
         if (theme === 'dark' || theme === 'light') {
             localStorage.setItem('theme', theme);
         }
 
         const savedTheme = localStorage.getItem('theme');
-
-        document.documentElement.classList.toggle(
-            'dark',
-            savedTheme
-                ? savedTheme === 'dark'
-                : window.matchMedia('(prefers-color-scheme: dark)').matches
-        );
-        </script>
+        const isDark = savedTheme 
+            ? savedTheme === 'dark' 
+            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (isDark) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     
     <!-- Link External CSS -->
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
-<body class="dark-theme">
+<body> <!-- Removed class="dark-theme" to prevent conflicts -->
 
     <div id="toast">Message Sent Successfully!</div>
 
@@ -46,7 +60,7 @@
     </div>
 
     <!-- Nav -->
-    <nav class="fixed w-full z-50 px-4 py-4" id="navbar">
+    <nav class="fixed w-full z-50 px-4 py-4 mt-1 transition-all duration-300" id="navbar">
         <div class="max-w-6xl mx-auto glass rounded-full px-6 py-3 flex justify-between items-center shadow-2xl transition-all duration-300">
             <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
                 <img id="nav-logo" src="./assets/icons/wQC.png" alt="Logo" class="w-8 h-8 rounded-lg object-cover shadow-sm group-hover:scale-105 transition-transform" onerror="this.src='https://ui-avatars.com/api/?name=QC&background=3b82f6&color=fff'">
@@ -334,7 +348,6 @@
                     </div>
                 </div>
 
-                <!-- Update YOUR_LINKS_HERE in the hrefs below -->
                 <div class="flex justify-center gap-4">
                     <a href="https://www.instagram.com/22in_official" target="_blank" class="w-12 h-12 glass rounded-full flex items-center justify-center text-xl hover:-translate-y-2 transition-all hover:text-[#E4405F] hover:border-[#E4405F]/50 shadow-lg">
                         <i class="fab fa-instagram"></i>
@@ -355,7 +368,7 @@
             
         </div>
     </footer>
-
+    
     <!-- Link External Javascript -->
     <script src="./assets/js/script.js"></script>
 </body>
