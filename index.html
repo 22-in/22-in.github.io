@@ -10,6 +10,22 @@
     
     <!-- Original Favicon -->
     <link rel="icon" type="image/png" href="./assets/icons/sitelogo.png">
+    <script>
+        const theme = new URLSearchParams(location.search).get('theme');
+
+        if (theme === 'dark' || theme === 'light') {
+            localStorage.setItem('theme', theme);
+        }
+
+        const savedTheme = localStorage.getItem('theme');
+
+        document.documentElement.classList.toggle(
+            'dark',
+            savedTheme
+                ? savedTheme === 'dark'
+                : window.matchMedia('(prefers-color-scheme: dark)').matches
+        );
+        </script>
     
     <!-- Link External CSS -->
     <link rel="stylesheet" href="./assets/css/style.css">
