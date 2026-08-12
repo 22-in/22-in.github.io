@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://22-in.github.io/sitemap.xml
