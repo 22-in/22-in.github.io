@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Balloon Storm - Independence Day Experience</title>
+    <title>22 Celebrate Independence Day - F10</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <style>
         body, html {
@@ -194,7 +194,9 @@
             position: absolute; top: 25px; left: 25px; z-index: 1000;
             color: #fff; font-size: 4vmin; font-weight: bold;
             text-shadow: 0 2px 10px rgba(0,0,0,0.8); opacity: 0; transition: opacity 0.5s; pointer-events: none;
+            display: flex; flex-direction: column; gap: 0.8vmin;
         }
+        #gameUI .hud-row { display: flex; align-items: center; gap: 0.8vmin; }
 
         .particle { position: absolute; border-radius: 50%; pointer-events: none; animation: explode 0.5s ease-out forwards; }
         @keyframes explode { 0% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
@@ -254,9 +256,6 @@
         }
         .watermark.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
         .watermark:hover { color: #FF9933; border-color: #FF9933; }
-
-        #gameUI { display: flex; flex-direction: column; gap: 0.8vmin; }
-        #gameUI .hud-row { display: flex; align-items: center; gap: 0.8vmin; }
 
         .leaderboard-popup {
             position: fixed; inset: 0; z-index: 90000; display: none;
@@ -460,6 +459,7 @@
         let gameActive = false;
         let gameTimeLeft = 60;
         let gameTimerInterval = null;
+        let gameSpawnerTimeout = null;
 
         const baseSpoke = document.getElementById('spoke');
         for (let i = 1; i < 24; i++) {
@@ -514,8 +514,23 @@
                 : (Math.random() < 0.8 ? flagColors[Math.floor(Math.random() * flagColors.length)] : randomColors[Math.floor(Math.random() * randomColors.length)]);
             
             b.style.left = (Math.random() * 90 + 5) + '%'; 
-            const duration = (Math.random() * 3 + (isGameMode ? 4 : 5)) + 's';
-            b.style.animationDuration = duration;
+            
+            // Dheere-dheere speed badhane ka logic:
+            let durationSec;
+            if (isGameMode) {
+                // Game Progress 0.0 (shuruat) se 1.0 (aakhri seconds)
+                const progress = Math.min(1, Math.max(0, (60 - gameTimeLeft) / 60));
+                
+                // Shuru mein duration 7s se 8.5s (bohot slow)
+                // Aakhri mein duration 2.2s se 3.2s (bohot fast)
+                const minDur = 7.0 - (progress * 4.8); 
+                const maxDur = 8.5 - (progress * 5.3); 
+                durationSec = Math.random() * (maxDur - minDur) + minDur;
+            } else {
+                durationSec = Math.random() * 3 + 5;
+            }
+
+            b.style.animationDuration = durationSec + 's';
             
             if(type === 'front') {
                  b.style.width = baseSize + 'vmin'; b.style.height = (baseSize * 1.25) + 'vmin';
@@ -543,7 +558,7 @@
             }
 
             cameraElements.appendChild(b);
-            setTimeout(() => b.remove(), parseFloat(duration) * 1000);
+            setTimeout(() => { if (b.parentNode) b.remove(); }, durationSec * 1000);
         }
 
         function createExplosion(x, y, color) {
@@ -557,23 +572,44 @@
             }
         }
 
+        // Dynamic balloon spawner for game mode (gap bhi dheere-dheere kam hota hai)
+        function spawnGameBalloonsLoop() {
+            if (!gameActive || !isGameMode) return;
+            createBalloon('front');
+
+            const progress = Math.min(1, Math.max(0, (60 - gameTimeLeft) / 60));
+            // Gap 900ms (shuruat) se ghatkar 260ms (ant) ho jata hai
+            const currentDelay = 900 - (progress * 640) + (Math.random() * 80 - 40);
+
+            gameSpawnerTimeout = setTimeout(spawnGameBalloonsLoop, Math.max(220, currentDelay));
+        }
+
         function startBalloons(initialBurst) {
-            balloonIntervals.forEach(clearInterval); balloonIntervals = [];
-            if(initialBurst && !isGameMode) {
-                for(let i=0; i<15; i++) setTimeout(() => createBalloon('front'), i * 100);
-                for(let i=0; i<5; i++) setTimeout(() => createBalloon('back'), i * 300);
+            balloonIntervals.forEach(clearInterval); 
+            balloonIntervals = [];
+            clearTimeout(gameSpawnerTimeout);
+
+            if (isGameMode) {
+                spawnGameBalloonsLoop();
+            } else {
+                if(initialBurst) {
+                    for(let i=0; i<15; i++) setTimeout(() => createBalloon('front'), i * 100);
+                    for(let i=0; i<5; i++) setTimeout(() => createBalloon('back'), i * 300);
+                }
+                balloonIntervals.push(setInterval(() => createBalloon('front'), 300));
+                balloonIntervals.push(setInterval(() => createBalloon('back'), 1200));
             }
-            balloonIntervals.push(setInterval(() => createBalloon('front'), isGameMode ? 400 : 300));
-            if(!isGameMode) balloonIntervals.push(setInterval(() => createBalloon('back'), 1200));
         }
 
         const FREEDOM_LEGENDS = ['Mahatma Gandhi', 'Bhagat Singh', 'Netaji Subhas Chandra Bose'];
 
         function startGameTimer() {
             clearInterval(gameTimerInterval);
+            clearTimeout(gameSpawnerTimeout);
             gameTimeLeft = 60;
             timerVal.textContent = gameTimeLeft;
             gameActive = true;
+            
             gameTimerInterval = setInterval(() => {
                 gameTimeLeft--;
                 timerVal.textContent = gameTimeLeft;
@@ -586,7 +622,10 @@
 
         function endGame() {
             gameActive = false;
-            balloonIntervals.forEach(clearInterval); balloonIntervals = [];
+            clearInterval(gameTimerInterval);
+            clearTimeout(gameSpawnerTimeout);
+            balloonIntervals.forEach(clearInterval); 
+            balloonIntervals = [];
             document.querySelectorAll('.balloon').forEach(b => b.remove());
             showLeaderboard();
         }
