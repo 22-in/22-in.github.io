@@ -1,1 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Balloon Storm - Independence Day Experience</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Courier New', Courier, monospace;
+            user-select: none;
+        }
 
+        .scene {
+            width: 100%;
+            height: 100%;
+            perspective: 2000px; 
+            position: relative;
+        }
+
+        .background {
+            position: absolute;
+            width: 100%; height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            filter: blur(5px) brightness(0.4); 
+            z-index: 1;
+            opacity: 0; 
+            transition: opacity 1s ease-in, filter 2s ease;
+        }
+        .background.fade-in { opacity: 1; filter: blur(2px) brightness(0.6); }
+
+        .bg-game {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            background: linear-gradient(to bottom, #1cb5e0 0%, #000046 100%);
+            opacity: 0; pointer-events: none; z-index: 2;
+            transition: opacity 1s ease;
+        }
+        .bg-game.active { opacity: 1; }
+
+        .wall {
+            position: absolute;
+            width: 80vmin; height: 50vmin;
+            background-color: #f0f0f0; border: 2px solid #bbb;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) translateZ(-3000px); 
+            box-shadow: 0 30px 100px rgba(0,0,0,0.8); 
+            z-index: 3; 
+            animation: wallApproach 3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            animation-delay: 0.5s;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; transform-style: preserve-3d;
+            transition: opacity 0.8s ease;
+        }
+
+        .flag-overlay {
+            position: absolute;
+            width: 110%; height: 110%; 
+            opacity: 0;
+            transform-origin: center center;
+            transform: scale(0);
+            filter: drop-shadow(0 15px 40px rgba(0,0,0,0.6));
+        }
+        .flag-overlay.boom {
+            animation: expandFlagBoom 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, waveFlag 5s ease-in-out infinite alternate 1s;
+        }
+
+        @keyframes expandFlagBoom {
+            0% { opacity: 0; transform: scale(0); }
+            60% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes waveFlag {
+            0% { transform: perspective(1000px) rotateY(3deg) rotateX(1deg); }
+            50% { transform: perspective(1000px) rotateY(-1deg) rotateX(-1deg); }
+            100% { transform: perspective(1000px) rotateY(-3deg) rotateX(1deg); }
+        }
+        @keyframes wallApproach {
+            0% { transform: translate(-50%, -50%) translateZ(-3000px); }
+            100% { transform: translate(-50%, -50%) translateZ(-150px); }
+        }
+
+        .festive-text {
+            position: absolute; bottom: 5vmin; left: 50%;
+            transform: translateX(-50%); font-size: 6vmin; font-weight: bold;
+            color: #FFFFFF; z-index: 10;
+            text-shadow: 0 0 10px #FF9933, 0 0 20px #128807;
+            opacity: 0; white-space: nowrap; transition: opacity 0.5s ease;
+        }
+        .festive-text.show { animation: showTextSlide 1s ease-out forwards, textShine 2s ease-in-out infinite alternate; }
+
+        @keyframes showTextSlide {
+            from { opacity: 0; transform: translate(-50%, 50px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+        @keyframes textShine {
+            0% { text-shadow: 0 0 10px #FF9933, 0 0 20px #128807; }
+            100% { text-shadow: 0 0 20px #FF9933, 0 0 35px #FFFFFF, 0 0 20px #128807; }
+        }
+
+        .balloon {
+           position: absolute; border-radius: 50%; opacity: 0.95;
+           animation: riseUpward linear forwards;
+           box-shadow: inset -1.5vmin -1.5vmin 3vmin rgba(0,0,0,0.4), 0 10px 20px rgba(0,0,0,0.3); 
+           transform-style: preserve-3d; cursor: default;
+        }
+        .balloon::after { 
+            content: ''; position: absolute; bottom: -60%; left: 50%;
+            width: 1px; height: 60%; background-color: rgba(255,255,255,0.4);
+        }
+        @keyframes riseUpward {
+            0% { transform: translateY(110vh) translateZ(var(--z-start)) rotate(-5deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-120vh) translateZ(var(--z-end)) rotate(5deg); opacity: 1; }
+        }
+
+        .bullet {
+            position: absolute; top: 50%; left: 50%; width: 4vmin; height: 4vmin; 
+            background: radial-gradient(circle at 30% 30%, #fffacd 0%, #ffd700 40%, #daa520 80%, #8b4513 100%);
+            border-radius: 50%; transform: translate(-50%, -50%) translateZ(200px); 
+            z-index: 5; animation: fireBullet 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; 
+            animation-delay: 0.2s; box-shadow: 0 0 50px rgba(255, 215, 0, 1);
+        }
+        @keyframes fireBullet {
+            0% { transform: translate(-50%, -50%) translateZ(200px); }
+            99% { transform: translate(-50%, -50%) translateZ(-2990px); opacity: 1; }
+            100% { transform: translate(-50%, -50%) translateZ(-3000px); opacity: 0; }
+        }
+
+        .scope-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 100; transform-style: preserve-3d;
+            animation: scopeExpand 1s ease-out forwards;
+            animation-delay: 0.1s; pointer-events: none;
+        }
+        .scope-border {
+            width: 90vmin; height: 90vmin; border: 5vmin solid #111;
+            border-radius: 50%; box-shadow: 0 0 0 200vmax rgba(0,0,0,0.95);
+            position: relative; overflow: hidden;
+        }
+        .scope-reticle { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .reticle-line { stroke: #ff2222; stroke-width: 2; filter: drop-shadow(0 0 4px #ff1111); }
+        .reticle-dot { fill: #ff2222; filter: drop-shadow(0 0 6px #ff1111); }
+        .mil-dot { fill: rgba(255,60,60,0.85); }
+        .corner-bracket { fill: none; stroke: #ff5555; stroke-width: 3; opacity: 0.85; }
+        .range-ring { fill: none; stroke: rgba(255,40,40,0.35); stroke-width: 1.5; }
+        .range-ring-inner { stroke-dasharray: 4 7; }
+
+        .scope-hud {
+            position: absolute; inset: 0; pointer-events: none;
+            font-family: 'Courier New', Courier, monospace; color: #ff4444;
+            font-size: 1.3vmin; letter-spacing: 1px;
+            text-shadow: 0 0 6px #ff1111;
+        }
+        .hud-item { position: absolute; white-space: nowrap; }
+        .hud-top { top: 7%; left: 50%; transform: translateX(-50%); }
+        .hud-left { bottom: 9%; left: 11%; }
+        .hud-right { bottom: 9%; right: 11%; }
+        .hud-bottom { bottom: 3%; left: 50%; transform: translateX(-50%); }
+        .hud-blink { animation: blinkOpacity 0.6s steps(1) infinite; }
+        @keyframes blinkOpacity { 50% { opacity: 0.15; } }
+
+        @keyframes scopeExpand {
+            0% { transform: scale(1) translateZ(0); opacity: 1; }
+            30% { transform: scale(1.03) translateZ(0); opacity: 1; }
+            100% { transform: scale(4) translateZ(-600px); opacity: 0; }
+        }
+
+        .ui-buttons {
+            position: absolute; top: 25px; right: 25px;
+            display: flex; gap: 12px; z-index: 1000;
+        }
+        .icon-btn {
+            font-size: 4vmin; background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 12px;
+            padding: 0.8vmin 1.6vmin; cursor: pointer;
+            color: rgba(255, 255, 255, 0.9); transition: all 0.25s ease;
+            backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
+        }
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.3); border-color: #fff;
+            color: #fff; transform: translateY(-2px) scale(1.05);
+        }
+
+        #gameUI {
+            position: absolute; top: 25px; left: 25px; z-index: 1000;
+            color: #fff; font-size: 4vmin; font-weight: bold;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8); opacity: 0; transition: opacity 0.5s; pointer-events: none;
+        }
+
+        .particle { position: absolute; border-radius: 50%; pointer-events: none; animation: explode 0.5s ease-out forwards; }
+        @keyframes explode { 0% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
+
+        .flower { position: absolute; font-size: 4vmin; pointer-events: none; animation: fallAndFade 2s ease-out forwards; z-index: 100; }
+        @keyframes fallAndFade { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; } }
+        
+        .game-cursor { cursor: crosshair; }
+
+        .modal-btn {
+            flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: bold;
+            cursor: pointer; font-size: 0.85rem; transition: 0.2s;
+        }
+        .modal-btn.save { background: #FF9933; color: #000; }
+        .modal-btn.save:hover { background: #ffaa4d; box-shadow: 0 0 15px #FF9933; }
+        .modal-btn.reset { background: #d63031; color: #fff; }
+
+        .bullet, .wall { animation-play-state: paused; }
+        body.started .bullet, body.started .wall { animation-play-state: running; }
+
+        #startGate {
+            position: fixed; inset: 0; z-index: 99999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 20px; box-sizing: border-box; color: #fff;
+            background: radial-gradient(circle at center, #14141c 0%, #000 100%);
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        #startGate.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        #startGate .emoji { font-size: 10vmin; margin-bottom: 2vmin; }
+        #startGate h1 {
+            font-size: 5vmin; margin: 0 0 1.5vmin 0; letter-spacing: 1px;
+            color: #fff; text-shadow: 0 0 10px #FF9933, 0 0 20px #128807;
+        }
+        #startGate p { font-size: 2.2vmin; opacity: 0.7; margin: 0 0 4vmin 0; }
+        #startBtn {
+            font-size: 3.2vmin; padding: 2vmin 6vmin; border-radius: 50px;
+            border: none; cursor: pointer; font-weight: bold; color: #111;
+            background: linear-gradient(135deg, #FF9933, #ff6b00);
+            box-shadow: 0 0 30px rgba(255,153,51,0.55);
+            transition: transform 0.2s ease;
+        }
+        #startBtn:hover { transform: scale(1.05); }
+        #startGate .gate-link {
+            margin-top: 3.5vmin; font-size: 1.8vmin; color: #00cec9;
+            text-decoration: underline; opacity: 0.8;
+        }
+        #startGate .gate-link:hover { opacity: 1; }
+
+        .watermark {
+            position: fixed; bottom: 2vmin; right: 2vmin; z-index: 500;
+            font-family: 'Courier New', Courier, monospace; font-size: 1.6vmin;
+            color: rgba(255,255,255,0.55); text-decoration: none;
+            background: rgba(0,0,0,0.35); border: 1px solid rgba(255,153,51,0.4);
+            padding: 0.8vmin 1.6vmin; border-radius: 30px; backdrop-filter: blur(3px);
+            opacity: 0; transform: translateY(10px); pointer-events: none;
+            transition: opacity 1s ease, transform 1s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        .watermark.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .watermark:hover { color: #FF9933; border-color: #FF9933; }
+
+        #gameUI { display: flex; flex-direction: column; gap: 0.8vmin; }
+        #gameUI .hud-row { display: flex; align-items: center; gap: 0.8vmin; }
+
+        .leaderboard-popup {
+            position: fixed; inset: 0; z-index: 90000; display: none;
+            align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+        }
+        .leaderboard-card {
+            width: 90%; max-width: 420px; background: linear-gradient(160deg, #14141c, #0a0a10);
+            border: 1px solid rgba(255,153,51,0.5); border-radius: 18px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.9), 0 0 25px rgba(255,153,51,0.25);
+            padding: 28px 24px; color: #fff; text-align: center; font-family: sans-serif;
+        }
+        .leaderboard-card h2 { margin: 0 0 4px; font-size: 1.5rem; color: #FF9933; letter-spacing: 1px; }
+        .lb-subtitle { margin: 0 0 18px; font-size: 0.72rem; color: #999; text-transform: uppercase; letter-spacing: 1px; }
+        .lb-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+        .lb-row {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px; padding: 10px 14px; font-size: 0.9rem;
+        }
+        .lb-row.lb-you {
+            background: rgba(255,153,51,0.15); border-color: #FF9933;
+            box-shadow: 0 0 15px rgba(255,153,51,0.25);
+        }
+        .lb-rank { font-weight: bold; color: #00cec9; width: 32px; text-align: left; }
+        .lb-name { flex: 1; text-align: left; padding: 0 8px; }
+        .lb-val { font-weight: bold; color: #FFD700; }
+        .lb-watermark {
+            font-size: 0.65rem; color: rgba(255,255,255,0.35); letter-spacing: 1px;
+            margin-bottom: 16px; font-family: 'Courier New', Courier, monospace;
+        }
+        .lb-actions { display: flex; gap: 10px; }
+    </style>
+</head>
+<body>
+    <div id="startGate">
+        <div class="emoji">🇮🇳</div>
+        <h1>HAPPY INDEPENDENCE DAY</h1>
+        <p>Tap to begin with sound</p>
+        <button id="startBtn">▶ TAP TO START</button>
+        <a class="gate-link" id="exploreEcosystemBtn" href="https://22-in.github.io/home" target="_blank" rel="noopener noreferrer">🌐 Explore Ecosystem</a>
+    </div>
+
+    <div class="scene" id="scene">
+        <div class="background" id="bg"></div>
+        <div class="bg-game" id="bg-game"></div>
+
+        <div id="gameUI">
+            <div class="hud-row">⏱️ <span id="timerVal">60</span>s</div>
+            <div class="hud-row">🎈 <span id="scoreVal">0</span></div>
+        </div>
+
+        <div class="ui-buttons">
+            <div class="icon-btn" id="gameBtn" title="Switch to Game Mode">🎯</div>
+            <div class="icon-btn" id="phoneBtn" title="Flower Burst">📱</div>
+            <div class="icon-btn" id="refreshBtn" title="Reload Animation">🔄</div>
+        </div>
+        
+        <div class="camera-elements" id="cameraElements">
+            <div class="bullet" id="bullet"></div>
+            
+            <div class="wall" id="wall">
+                <svg class="flag-overlay" id="flag" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                    <rect width="900" height="200" fill="#FF9933"/>
+                    <rect y="200" width="900" height="200" fill="#FFFFFF"/>
+                    <rect y="400" width="900" height="200" fill="#128807"/>
+                    <g transform="translate(450, 300)">
+                        <circle r="92.5" fill="none" stroke="#000080" stroke-width="5"/>
+                        <circle r="15" fill="#000080"/>
+                        <g id="spoke"><line y2="-92.5" stroke="#000080" stroke-width="2"/></g>
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <div class="scope-overlay" id="scope-overlay">
+            <div class="scope-border">
+                <svg class="scope-reticle" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="200" cy="200" r="150" class="range-ring"/>
+                    <circle cx="200" cy="200" r="110" class="range-ring range-ring-inner"/>
+                    <line x1="0" y1="200" x2="160" y2="200" class="reticle-line"/>
+                    <line x1="240" y1="200" x2="400" y2="200" class="reticle-line"/>
+                    <line x1="200" y1="0" x2="200" y2="160" class="reticle-line"/>
+                    <line x1="200" y1="240" x2="200" y2="400" class="reticle-line"/>
+                    <circle cx="200" cy="200" r="3" class="reticle-dot"/>
+                    <circle cx="55" cy="200" r="4" class="mil-dot"/>
+                    <circle cx="105" cy="200" r="4" class="mil-dot"/>
+                    <circle cx="295" cy="200" r="4" class="mil-dot"/>
+                    <circle cx="345" cy="200" r="4" class="mil-dot"/>
+                    <circle cx="200" cy="55" r="4" class="mil-dot"/>
+                    <circle cx="200" cy="105" r="4" class="mil-dot"/>
+                    <circle cx="200" cy="295" r="4" class="mil-dot"/>
+                    <circle cx="200" cy="345" r="4" class="mil-dot"/>
+                    <path d="M 25 65 L 25 25 L 65 25" class="corner-bracket"/>
+                    <path d="M 335 25 L 375 25 L 375 65" class="corner-bracket"/>
+                    <path d="M 375 335 L 375 375 L 335 375" class="corner-bracket"/>
+                    <path d="M 65 375 L 25 375 L 25 335" class="corner-bracket"/>
+                </svg>
+                <div class="scope-hud">
+                    <span class="hud-item hud-top">ZOOM 6.5x</span>
+                    <span class="hud-item hud-left">28.6139°N</span>
+                    <span class="hud-item hud-right">77.2090°E</span>
+                    <span class="hud-item hud-bottom hud-blink">● TARGET LOCKED</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="festive-text" id="festiveText">Happy Independence Day</div>
+    </div>
+
+    <a id="watermark" class="watermark" href="https://22-in.github.io/home" target="_blank" rel="noopener noreferrer">⚡ Powered by 22 Company</a>
+
+    <div id="leaderboardPopup" class="leaderboard-popup">
+        <div class="leaderboard-card" id="leaderboardCard">
+            <h2>🏆 TIME'S UP!</h2>
+            <p class="lb-subtitle">Balloons popped in 60 seconds</p>
+            <div id="leaderboardList" class="lb-list"></div>
+            <div class="lb-watermark">⚡ 22 Company</div>
+            <div class="lb-actions">
+                <button class="modal-btn save" id="shareBtn">📤 Share</button>
+                <button class="modal-btn reset" id="retryBtn">🔄 Retry</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_SOUNDS = {
+            gunshot: 'https://www.myinstants.com/media/sounds/pistol-shot.mp3',
+            thud: 'https://www.myinstants.com/media/sounds/cartoon-metallic-stomp.mp3',
+            cloth: 'https://www.myinstants.com/media/sounds/fire-whoosh.mp3',
+            applause: 'https://www.myinstants.com/media/sounds/crowd-applause-cheer-small-group_tUQjCQt.mp3',
+            anthem: 'https://cdn.pixabay.com/audio/2025/12/03/audio_1f0e273bbf.mp3',
+            pop: 'https://www.myinstants.com/media/sounds/comedy_pop_finger_in_mouth_001.mp3'
+        };
+
+        const AudioEngine = {
+            urls: DEFAULT_SOUNDS,
+            audioCache: {},
+
+            init() {
+                for (let key in this.urls) {
+                    const audio = new Audio();
+                    audio.preload = 'auto';
+                    audio.onerror = () => console.warn(`[AudioEngine] "${key}" link failed to load:`, this.urls[key]);
+                    audio.src = this.urls[key];
+                    this.audioCache[key] = audio;
+                }
+            },
+
+            unlock() {
+                for (let key in this.audioCache) {
+                    const a = this.audioCache[key];
+                    a.muted = true;
+                    const p = a.play();
+                    if (p && p.catch) {
+                        p.then(() => { a.pause(); a.currentTime = 0; a.muted = false; })
+                         .catch(() => { a.muted = false; });
+                    } else {
+                        a.pause(); a.muted = false;
+                    }
+                }
+            },
+
+            play(key, volume = 1.0) {
+                try {
+                    const sound = new Audio(this.urls[key]);
+                    sound.volume = volume;
+                    sound.play().catch(err => console.warn(`[AudioEngine] "${key}" couldn't play:`, err.message));
+                } catch(e) {}
+            }
+        };
+
+        AudioEngine.init();
+
+        const flag = document.getElementById('flag');
+        const bg = document.getElementById('bg');
+        const bgGame = document.getElementById('bg-game');
+        const festiveText = document.getElementById('festiveText');
+        const phoneBtn = document.getElementById('phoneBtn');
+        const gameBtn = document.getElementById('gameBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const cameraElements = document.getElementById('cameraElements');
+        const scene = document.getElementById('scene');
+        const wall = document.getElementById('wall');
+        const scopeOverlay = document.getElementById('scope-overlay');
+        const gameUI = document.getElementById('gameUI');
+        const scoreVal = document.getElementById('scoreVal');
+        const timerVal = document.getElementById('timerVal');
+        const watermark = document.getElementById('watermark');
+        const leaderboardPopup = document.getElementById('leaderboardPopup');
+        const leaderboardCard = document.getElementById('leaderboardCard');
+        const leaderboardList = document.getElementById('leaderboardList');
+        const shareBtn = document.getElementById('shareBtn');
+        const retryBtn = document.getElementById('retryBtn');
+        
+        let mouseTrailEnabled = false;
+        let isGameMode = false;
+        let score = 0;
+        let kills = 0;
+        let balloonIntervals = [];
+        let gameActive = false;
+        let gameTimeLeft = 60;
+        let gameTimerInterval = null;
+
+        const baseSpoke = document.getElementById('spoke');
+        for (let i = 1; i < 24; i++) {
+            const newSpoke = baseSpoke.cloneNode(true);
+            newSpoke.setAttribute('transform', `rotate(${i * 15})`);
+            baseSpoke.parentNode.appendChild(newSpoke);
+        }
+
+        function beginExperience() {
+            document.body.classList.add('started');
+
+            setTimeout(() => {
+                AudioEngine.play('gunshot', 1.0);
+            }, 200);
+
+            setTimeout(() => {
+                AudioEngine.play('thud', 1.0);
+                AudioEngine.play('cloth', 0.8);
+                flag.classList.add('boom');
+                bg.classList.add('fade-in');
+            }, 1200);
+
+            setTimeout(() => {
+                AudioEngine.play('applause', 0.85);
+                AudioEngine.play('anthem', 0.7);
+                festiveText.classList.add('show');
+                watermark.classList.add('show');
+                startBalloons(true);
+                setTimeout(() => { mouseTrailEnabled = true; }, 800);
+            }, 1800);
+        }
+
+        const startGate = document.getElementById('startGate');
+        const startBtn = document.getElementById('startBtn');
+
+        startBtn.addEventListener('click', () => {
+            AudioEngine.unlock();
+            startGate.classList.add('hidden');
+            beginExperience();
+        }, { once: true });
+
+        const flagColors = ['#FF9933', '#FFFFFF', '#128807', '#000080']; 
+        const randomColors = ['#ff0055', '#00f3ff', '#ffe600', '#b000ff'];
+
+        function createBalloon(type = 'front') {
+            const b = document.createElement('div');
+            b.classList.add('balloon');
+            const baseSize = (Math.random() * 4 + 5); 
+            
+            b.style.backgroundColor = isGameMode 
+                ? randomColors[Math.floor(Math.random() * randomColors.length)]
+                : (Math.random() < 0.8 ? flagColors[Math.floor(Math.random() * flagColors.length)] : randomColors[Math.floor(Math.random() * randomColors.length)]);
+            
+            b.style.left = (Math.random() * 90 + 5) + '%'; 
+            const duration = (Math.random() * 3 + (isGameMode ? 4 : 5)) + 's';
+            b.style.animationDuration = duration;
+            
+            if(type === 'front') {
+                 b.style.width = baseSize + 'vmin'; b.style.height = (baseSize * 1.25) + 'vmin';
+                 b.style.setProperty('--z-start', '200px'); b.style.setProperty('--z-end', '300px');
+                 b.style.zIndex = '4';
+            } else {
+                 const backSize = (baseSize * 0.7); 
+                 b.style.width = backSize + 'vmin'; b.style.height = (backSize * 1.25) + 'vmin';
+                 b.style.setProperty('--z-start', '-3000px'); b.style.setProperty('--z-end', '-2900px');
+                 b.style.zIndex = '2';
+            }
+
+            if (isGameMode) {
+                b.style.cursor = 'crosshair';
+                b.style.zIndex = '10';
+                b.addEventListener('mousedown', (e) => {
+                    if (!gameActive) return;
+                    AudioEngine.play('pop', 0.9);
+                    createExplosion(e.clientX, e.clientY, b.style.backgroundColor);
+                    score += 10;
+                    kills += 1;
+                    scoreVal.innerText = score;
+                    b.remove();
+                });
+            }
+
+            cameraElements.appendChild(b);
+            setTimeout(() => b.remove(), parseFloat(duration) * 1000);
+        }
+
+        function createExplosion(x, y, color) {
+            for(let i=0; i<8; i++) {
+                const p = document.createElement('div'); p.classList.add('particle');
+                const angle = Math.random() * Math.PI * 2; const vel = Math.random() * 60 + 20;
+                p.style.width = '8px'; p.style.height = '8px'; p.style.background = color;
+                p.style.left = x + 'px'; p.style.top = y + 'px';
+                p.style.setProperty('--dx', Math.cos(angle)*vel + 'px'); p.style.setProperty('--dy', Math.sin(angle)*vel + 'px');
+                document.body.appendChild(p); setTimeout(() => p.remove(), 500);
+            }
+        }
+
+        function startBalloons(initialBurst) {
+            balloonIntervals.forEach(clearInterval); balloonIntervals = [];
+            if(initialBurst && !isGameMode) {
+                for(let i=0; i<15; i++) setTimeout(() => createBalloon('front'), i * 100);
+                for(let i=0; i<5; i++) setTimeout(() => createBalloon('back'), i * 300);
+            }
+            balloonIntervals.push(setInterval(() => createBalloon('front'), isGameMode ? 400 : 300));
+            if(!isGameMode) balloonIntervals.push(setInterval(() => createBalloon('back'), 1200));
+        }
+
+        const FREEDOM_LEGENDS = ['Mahatma Gandhi', 'Bhagat Singh', 'Netaji Subhas Chandra Bose'];
+
+        function startGameTimer() {
+            clearInterval(gameTimerInterval);
+            gameTimeLeft = 60;
+            timerVal.textContent = gameTimeLeft;
+            gameActive = true;
+            gameTimerInterval = setInterval(() => {
+                gameTimeLeft--;
+                timerVal.textContent = gameTimeLeft;
+                if (gameTimeLeft <= 0) {
+                    clearInterval(gameTimerInterval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            gameActive = false;
+            balloonIntervals.forEach(clearInterval); balloonIntervals = [];
+            document.querySelectorAll('.balloon').forEach(b => b.remove());
+            showLeaderboard();
+        }
+
+        function showLeaderboard() {
+            const board = FREEDOM_LEGENDS.map(name => ({
+                name,
+                val: Math.floor(Math.random() * 40) + 55
+            }));
+            board.push({ name: 'You', val: kills, isYou: true });
+            board.sort((a, b) => b.val - a.val);
+
+            leaderboardList.innerHTML = board.map((entry, i) => `
+                <div class="lb-row ${entry.isYou ? 'lb-you' : ''}">
+                    <span class="lb-rank">#${i + 1}</span>
+                    <span class="lb-name">${entry.isYou ? 'You' : entry.name}</span>
+                    <span class="lb-val">${entry.val} 🎈</span>
+                </div>
+            `).join('');
+
+            leaderboardPopup.style.display = 'flex';
+        }
+
+        shareBtn.addEventListener('click', () => {
+            if (typeof html2canvas === 'undefined') {
+                alert('Screenshot engine abhi load ho raha hai, thoda ruk ke dobara try karo.');
+                return;
+            }
+            html2canvas(leaderboardCard, { backgroundColor: '#0a0a10', scale: 2 }).then(canvas => {
+                canvas.toBlob(blob => {
+                    if (navigator.clipboard && window.ClipboardItem) {
+                        navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ])
+                            .then(() => {
+                                shareBtn.textContent = '✅ Copied!';
+                                setTimeout(() => shareBtn.textContent = '📤 Share', 1500);
+                            })
+                            .catch(() => downloadCanvas(canvas));
+                    } else {
+                        downloadCanvas(canvas);
+                    }
+                });
+            }).catch(() => alert('Screenshot lene mein dikkat aayi, dobara try karo.'));
+        });
+
+        function downloadCanvas(canvas) {
+            const link = document.createElement('a');
+            link.download = 'my-independence-day-score.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            shareBtn.textContent = '⬇️ Downloaded';
+            setTimeout(() => shareBtn.textContent = '📤 Share', 1500);
+        }
+
+        retryBtn.addEventListener('click', () => {
+            leaderboardPopup.style.display = 'none';
+            score = 0; kills = 0; scoreVal.innerText = score;
+            document.querySelectorAll('.balloon').forEach(b => b.remove());
+            startGameTimer();
+            startBalloons(false);
+        });
+
+        gameBtn.addEventListener('click', () => {
+            if (isGameMode) return;
+            isGameMode = true;
+            
+            wall.style.opacity = '0';
+            festiveText.style.opacity = '0';
+            bg.style.opacity = '0';
+            scopeOverlay.style.display = 'none';
+            bgGame.classList.add('active');
+            gameUI.style.opacity = '1';
+            document.body.classList.add('game-cursor');
+            
+            document.querySelectorAll('.balloon').forEach(b => b.remove());
+            score = 0; kills = 0; scoreVal.innerText = score;
+            startGameTimer();
+            startBalloons(false);
+        });
+
+        const flowers = ['🌸', '🌼', '🌺', '🌻'];
+        function generateFlower(x, y, isTrail = true) {
+            const flower = document.createElement('div');
+            flower.classList.add('flower');
+            flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+            flower.style.left = (x - 10) + 'px'; flower.style.top = (y - 10) + 'px';
+            flower.style.setProperty('--dx', (Math.random() * 200 - 100) + 'px');
+            flower.style.setProperty('--dy', (Math.random() * 150 + (isTrail ? 100 : 150)) + 'px');
+            flower.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
+            scene.appendChild(flower);
+            setTimeout(() => flower.remove(), 2000);
+        }
+
+        scene.addEventListener('mousemove', (e) => {
+            if (mouseTrailEnabled && !isGameMode) generateFlower(e.clientX, e.clientY, true);
+        });
+
+        phoneBtn.addEventListener('click', () => {
+            for(let i=0; i<40; i++) {
+                setTimeout(() => generateFlower(Math.random() * window.innerWidth, -20, false), i * 20);
+            }
+        });
+
+        refreshBtn.addEventListener('click', () => location.reload());
+    </script>
+</body>
+</html>
