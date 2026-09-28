@@ -1,0 +1,11 @@
+{
+  "notification": {
+    "id": "welcome_launch_2026",
+    "title": "🎉 Welcome to QuickCode 3.0!",
+    "message": "Experience 120 FPS Native Coding powered by 22 Company. Happy Coding!",
+    "type": "ANNOUNCEMENT",
+    "action_url": "https://22-in.github.io/",
+    "show_in_system_tray": true,
+    "show_in_app_popup": true
+  }
+}
