@@ -106,7 +106,7 @@
             overflow: hidden;
         }
         .glass-panel::before {
-            content: ''; position: absolute; inset: 0; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(168, 85, 247, 0.06), transparent 40%); opacity: 0; transition: opacity 0.5s; z-index: 0;
+            content: ''; position: absolute; inset: 0; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(168, 85, 247, 0.06), transparent 40%); opacity: 0; transition: opacity 0.5s; z-index: 0; pointer-events: none;
         }
         .glass-panel:hover::before { opacity: 1; }
         .glass-panel:hover { transform: translateY(-8px) scale(1.01); z-index: 10; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15); }
@@ -487,13 +487,14 @@
                 <div class="glass-panel p-8 md:p-10 rounded-[2rem] reveal" style="transition-delay: 200ms;">
                     <h3 class="font-heading text-2xl font-bold text-zinc-900 dark:text-white mb-2">Let's Connect</h3>
                     <p class="text-zinc-500 font-medium text-sm mb-8">Partnerships, ideas, or just saying hi.</p>
-                    <form action="mailto:quickcode.by.22@gmail.com" method="POST" enctype="text/plain" class="space-y-4">
+                    <form id="contact-form" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" placeholder="Name" required class="w-full bg-zinc-50 dark:bg-[#0a0a0a] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3.5 text-sm outline-none focus:border-store22 dark:focus:border-store22 focus:ring-1 focus:ring-store22 transition-all">
-                            <input type="email" placeholder="Email" required class="w-full bg-zinc-50 dark:bg-[#0a0a0a] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3.5 text-sm outline-none focus:border-store22 dark:focus:border-store22 focus:ring-1 focus:ring-store22 transition-all">
+                            <input name="name" type="text" autocomplete="name" placeholder="Name" required class="w-full bg-zinc-50 dark:bg-[#0a0a0a] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3.5 text-sm outline-none focus:border-store22 dark:focus:border-store22 focus:ring-1 focus:ring-store22 transition-all">
+                            <input name="email" type="email" autocomplete="email" placeholder="Email" required class="w-full bg-zinc-50 dark:bg-[#0a0a0a] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3.5 text-sm outline-none focus:border-store22 dark:focus:border-store22 focus:ring-1 focus:ring-store22 transition-all">
                         </div>
-                        <textarea rows="4" placeholder="Message..." required class="w-full bg-zinc-50 dark:bg-[#0a0a0a] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3.5 text-sm outline-none focus:border-store22 dark:focus:border-store22 focus:ring-1 focus:ring-store22 transition-all resize-none"></textarea>
+                        <textarea name="message" rows="4" placeholder="Message..." required class="w-full bg-zinc-50 dark:bg-[#0a0a0a] border border-zinc-200 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl px-4 py-3.5 text-sm outline-none focus:border-store22 dark:focus:border-store22 focus:ring-1 focus:ring-store22 transition-all resize-none"></textarea>
                         <button type="submit" class="w-full bg-zinc-900 dark:bg-white text-white dark:text-black font-bold text-sm rounded-xl px-4 py-4 hover:scale-[1.02] hover:shadow-lg transition-transform duration-300">Send Message</button>
+                        <p id="contact-status" class="text-xs text-zinc-500" role="status" aria-live="polite"></p>
                     </form>
                 </div>
 
@@ -575,6 +576,23 @@
                 }, 800);
             }, 4200);
         });
+
+        // Contact form: compose an email using the visitor's entered details.
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const fields = new FormData(contactForm);
+                const name = String(fields.get('name') || '').trim();
+                const email = String(fields.get('email') || '').trim();
+                const message = String(fields.get('message') || '').trim();
+                const subject = encodeURIComponent('Website contact from ' + name);
+                const body = encodeURIComponent('Name: ' + name + '\\nEmail: ' + email + '\\n\\nMessage:\\n' + message);
+                const status = document.getElementById('contact-status');
+                if (status) status.textContent = 'Opening your email app…';
+                window.location.href = 'mailto:quickcode.by.22@gmail.com?subject=' + subject + '&body=' + body;
+            });
+        }
 
         const themeToggleBtn = document.getElementById('theme-toggle');
         const iconMoon = document.getElementById('icon-moon');
