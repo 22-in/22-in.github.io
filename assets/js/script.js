@@ -27,11 +27,11 @@ function updateUI() {
     if (isDark) {
         themeIcon.className = 'fas fa-moon transition-all duration-300';
         themeIcon.style.color = 'white';
-        if (navLogo) navLogo.src = './assets/icons/wQC.png'; // White Logo for Dark Mode
+        if (navLogo) navLogo.src = './assets/icons/wqc.png'; // White Logo for Dark Mode
     } else {
         themeIcon.className = 'fas fa-sun text-orange-500 transition-all duration-300';
         themeIcon.style.color = ''; // Tailwind classes handle color here
-        if (navLogo) navLogo.src = './assets/icons/QC.png'; // Dark Logo for Light Mode
+        if (navLogo) navLogo.src = './assets/icons/qc.png'; // Dark Logo for Light Mode
     }
 
     // Navbar Background Update
